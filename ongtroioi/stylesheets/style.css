@@ -1,0 +1,363 @@
+@media all and (max-width: 500px) {
+   #LeftPanel {
+    width: 100%!important;
+}
+#RightPanel {
+	display:none!important;
+}
+.btnChoose{
+  font-size: 30px!important;
+}
+}
+
+#about {
+    position: fixed;
+    height: 5%;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+    color: #ecf0f1;
+    font-family: "Segoe UI Light";
+    bottom: 0px;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+#about:hover {
+    opacity: 1;
+}
+
+#about span {
+}
+
+body {
+    margin: 0;
+    color: white;
+    font-family: "Segoe UI Light";
+    background-color: black;
+    background: url("../images/BK1.svg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.body {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+#RightPanel {
+    /*background: darkgreen;*/
+    width: 40%;
+    height: 100%;
+    float: right;
+}
+
+
+
+#LeftPanel {
+    /*background-color: dimgrey;*/
+    width: 60%;
+    height: 100%;
+    float: left;
+}
+
+#TwoChoicePanel {
+    background: chartreuse;
+    width: 100%;
+    height: 50%;
+}
+
+#MutiChoicePanel {
+    /*background: cornflowerblue;*/
+    height: 50%;
+}
+
+.choicePanel {
+    height: 100%;
+    float: left;
+    text-align: center;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    cursor: pointer;
+}
+
+.choicePanel.twoRows {
+    width: 50%;
+    /*background: #0065a5;*/
+}
+
+.choicePanel.twoRows:hover {
+    /*background: darkcyan;*/
+}
+
+.choicePanel.fourRows {
+    width: 50%;
+    /*background: brown;*/
+}
+
+.choicePanel.fourRows:hover {
+    /*background: burlywood;*/
+}
+
+.twoOptionFirst {
+    background: darkgreen;
+    height: 50%;
+}
+
+.twoOptionLast {
+    background: darkcyan;
+    height: 50%;
+}
+
+.twoOptionSpan {
+    line-height: 100px;
+
+    font-size: 30px;
+    /*color: white;*/
+}
+
+#rpHeader {
+    /*background: burlywood;*/
+    height: 10%;
+}
+
+#rpHeader .title {
+    width: 100%;
+    /*background: darkmagenta;*/
+    text-align: center;
+    float: left;
+
+}
+
+#rpHeader .title .st {
+    /*display: none;*/
+    /*margin-top: 20px;*/
+    font-size: 5px;
+    transition: all 0.3s ease-in;
+}
+
+#rpHeader .title:hover .st {
+    /*display: none;*/
+    /*margin-top: 20px;*/
+    font-size: inherit;
+}
+
+#rpHeader .title span {
+    line-height: 50px;
+    font-size: 20px;
+}
+
+#rpHeader .slogan {
+    width: 50%;
+    /*background: blue;*/
+    text-align: center;
+    float: left;
+}
+
+#rpHeader .slogan span {
+    line-height: 50px;
+    font-size: 20px;
+}
+
+#helpText {
+    text-align: center;
+    /*margin: 20px auto 0 0;*/
+    /*background: coral;*/
+    font-size: 20px;
+    height: 10%;
+}
+
+#helpText span {
+
+}
+
+#helpText:hover .callSentence {
+    transition: all 0.3s ease-in;
+}
+
+#helpText:hover .callSentence {
+    font-weight: 700;
+}
+
+#answer {
+    text-align: center;
+    font-size: 30px;
+    padding: 5px;
+    height: 20%;
+}
+
+#boxResult {
+    width: 100%;
+    height: 100%;
+    /*line-height: 100px;*/
+}
+
+#boxClick {
+    transition: all 0.3s ease-in;
+    cursor: pointer;
+    margin: 0 auto;
+    width: 90%;
+    height: 20%;
+    font-size: 70px;
+    font-weight: 300;
+    border: solid 1px white;
+    text-align: center;
+    padding: 5px;
+}
+
+#boxClick:hover {
+    background-color: rgba(236, 240, 241, 0.2);
+    border: solid 1px black;
+    /*color: black;*/
+}
+
+.choicePanel.fourRows .twoOptionFirst {
+    transition: all 0.3s ease-in;
+}
+
+.choicePanel.fourRows:hover .twoOptionFirst {
+    /*margin-top: 100%;*/
+}
+
+.choicePanel.fourRows .twoOptionLast {
+    transition: all 0.3s ease-in;
+}
+
+.choicePanel.fourRows:hover .twoOptionLast {
+    /*margin-top: -200%;*/
+}
+
+.buttonOption {
+    height: 10%;
+    /*margin-top: 20px;*/
+}
+
+.buttonContain {
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+
+.btnChoose {
+    font-size: 40px;
+    width: 90%;
+    line-height: inherit;
+    display: inline-block;
+    color: #c1c2c3;
+    cursor: pointer;
+    border: 1px dashed #c1c2c3;
+    border-radius: 3px;
+    /*padding: 0 30px 4px 15px;*/
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    margin: 0 auto;
+}
+
+.btnChoose:hover {
+    border-color: #fff;
+    color: #fff;
+    border: 1px solid #c1c2c3;
+}
+
+.btnChoose.current {
+    border: 1px solid #2c3e50;
+    background: rgba(255, 255, 255, .5);
+    /*color: #2c3e50;*/
+
+}
+
+.btnChooseCurrent:hover {
+    background-color: white;
+    color: black;
+}
+
+#pl1 {
+    margin-top: 0px;
+    margin-left: -40px;
+}
+
+#pl2 {
+    margin-top: 270px;
+    margin-left: 360px;
+}
+
+#pl3 {
+    margin-top: 300px;
+    margin-left: 15px;
+}
+
+#popUp {
+    background-color: black;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 20%; /* adjust as per your needs */
+    height: 20%; /* adjust as per your needs */
+    z-index: 1;
+    display: none;
+}
+
+#textBoxFirst {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #848484;
+    outline: 0;
+    height: 25.5px;
+    width: 80%;
+    padding-left: 10px;
+    /*float:left;*/
+    margin-left: 10%;
+    font-size: 24.5px;
+	color: #ecf0f1;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+#textBoxSecond {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #848484;
+    outline: 0;
+    height: 25.5px;
+    width: 80%;
+    padding-left: 10px;
+    /*float:left;*/
+    margin-left: 10%;
+    font-size: 24.5px;
+	color: #ecf0f1;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+#editButtonLeft {
+    width: 50%;
+    float: left;
+}
+
+#editButtonRight {
+    width: 45%;
+    margin-right: 5%;
+    float: right;
+    cursor: pointer;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    border: 1px dashed #c1c2c3;
+}
+
+#editButtonRight:hover {
+    border: 1px solid #FFFFFF;
+}
+
+#editIcon{
+width:5%;
+height:52px;
+background-color:#123411
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+    <title>Ông Trời Ơi!!!</title>
+    <link rel='stylesheet' href='stylesheets/style.css'/>
+    <script type="text/javascript" src="javascripts/DB.js"></script>
+    <script type="text/javascript" src="javascripts/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.slotmachine.js"></script>
+    <script type="text/javascript" src="javascripts/js.js"></script>
+</head>
+<body>
+<div class="body">
+    <div id="popUp">
+
+    </div>
+    <div id="LeftPanel">
+	<div style="height:5%"></div>
+        <div id="helpText">
+            <span id="helpTextCont">Con hãy nói ba lần <span
+                    class="callSentence">"ÔNG TRỜI ƠI, HÃY GIÚP CON"</span>.</br>
+                Ta sẽ nghe thấy và cho con lời khuyên thông thái nhất.</span>
+        </div>
+		<div style="height:5%"></div>
+        <div id="boxClick">
+            <div id="boxResult">
+                .
+            </div>
+        </div>
+		<div style="height:5%"></div>
+        <div id="answer">
+            <span id="answerContent">.</span>
+        </div>
+		<div style="height:5%"></div>
+        <div class="buttonOption">
+            <div class="buttonContain">
+                <div id="T1" onclick="optClick('T1')" class="btnChoose">
+                    SẤP-NGỬA
+                </div>
+            </div>
+            <div class="buttonContain">
+                <div id="T2" onclick="optClick('T2')" class="btnChoose">
+                    CÓ-KHÔNG
+                </div>
+            </div>
+        </div>
+        <div class="buttonOption">
+            <div class="buttonContain">
+                <div id="T5" onclick="optClick('T5')" class="btnChoose">
+                    1-10
+                </div>
+            </div>
+            <div class="buttonContain">
+			<div id="T6" onclick="optClick('T6')" class="btnChoose" style="display: none">
+                     .-.
+                 </div>
+                <div id="editContain" style="display: block">
+                    <div id="editButtonLeft">
+                        <input id="textBoxFirst" type="text" value="XẤP" title="Viết cái gì đó">
+                        <input id="textBoxSecond" type="text" value="NGỬA" title="Viết cái gì đó">
+                    </div>
+                    <div id="editButtonRight" onclick="saveChoose()">
+                        <img src="images/save.svg" style="width: 100%;height: 52px;" title="Ấn để lưu">
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+    <div id="RightPanel">
+        <div id="rpHeader">
+            <!--KHÔNG CÂU TRẢ LỜI, XIN ĐỪNG TỰ BƠI!!!-->
+            <!--MUỐN BIẾT SỰ ĐỜI, GỌI ÔNG TRỜI ƠI!!!-->
+            <div class="title">
+                <!--<span>
+                    <span class="st">KH</span>ÔNG
+                    <span class="st">CÂU</span>
+                    TR<span class="st">Ả L</span>ỜI
+                    <span class="st">, XIN ĐỪNG TỰ B</span>ƠI!!!
+                </span>-->
+                </br>
+                <span>
+                     <span class="st">MUỐN BIẾT SỰ ĐỜI, GỌI </span>ÔNG TRỜI ƠI!!!
+                </span>
+            </div>
+            <!--<div class="slogan">
+                <span>Muốn biết sự đời, hãy hỏi ông trời</span>
+            </div>-->
+        </div>
+        <div id="container" class="container">
+            <ul id="scene" class="scene">
+                <li id="pl1" class="layer" data-depth="0.30"><img src="images/sun.svg"></li>
+                <li id="pl2" class="layer" data-depth="1.00"><img src="images/cloud.svg" height="200px"></li>
+                <li id="pl3" class="layer" data-depth="2.00">
+                    <div><img src="images/cloud.svg" height="300px"></div>
+                </li>
+            </ul>
+        </div>
+        <script src="javascripts/parallax.min.js"></script>
+        <script>
+            var scene = document.getElementById('scene');
+            var parallax = new Parallax(scene);
+        </script>
+        <!--<div id="TwoChoicePanel">
+            <div id="T1" onclick="optClick('T1')" onmouseover="onMouseOver('T1')" onmouseout="onMouseOut('T1')"
+                 class="choicePanel fourRows">
+                <div class="twoOptionFirst">
+                    <span class="twoOptionSpan">CÓ</span>
+                </div>
+                <div class="twoOptionLast">
+                    <span class="twoOptionSpan">KHÔNG</span>
+                </div>
+            </div>
+            <div id="T2" onclick="optClick('T2')" class="choicePanel fourRows">
+                <div class="twoOptionFirst">
+                    <span class="twoOptionSpan">ĐÚNG</span>
+                </div>
+                <div class="twoOptionLast">
+                    <span class="twoOptionSpan">SAI</span>
+                </div>
+            </div>
+        </div>
+        <div id="MutiChoicePanel">
+            <div class="choicePanel twoRows">
+
+            </div>
+            <div class="choicePanel twoRows">
+
+            </div>
+        </div>-->
+    </div>
+    <div id="about">
+        <span>Bùi Tiến Tuân - Nguyễn Thị Minh Trang</span>
+    </div>
+</div>
+<!--<img src="images/BK2.jpg" width="100%" height="100%">-->
+</body>
+</html>
