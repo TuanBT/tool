@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="css/style.css">
     <script src="js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="js/Winwheel.min.js"></script>
-    <script type="text/javascript" src="js//TweenMax.min.js"></script>
+    <script type="text/javascript" src="js/TweenMax.min.js"></script>
     <script src="js/script.js"></script>
 </head>
 
@@ -19,39 +19,45 @@
         <div align="center" id="pw1" onClick="powerSelected(1);">Low</div>
         <a href="#" onClick="resetWheel(); return false;">Play Again</a>
     </div>
-
-    <div class="the_wheel" align="center" valign="center">
-        <div style="position: absolute; top: 217px; right: 0px;"><--</div>
-        <canvas id="canvas" width="434" height="434" onClick="startSpin();">
+<div class="bg_wheel">
+    <div class="the_wheel" align="center" valign="center" onClick="resetWheel(); startSpin();">
+        <div class="result"><span class="result-text"></span></div>
+        <div class="arrow">◁</div>
+        <canvas id="canvas" width="434" height="434">
             <p>Sorry, your browser doesn't support canvas. Please try another.</p>
         </canvas>
     </div>
-
+</div>
     
     <script>
+        
+        
         // Create new wheel object specifying the parameters at creation time.
         var theWheel = new Winwheel({
             'rotationAngle': 90,
             'pointerAngle' : 90,
-            'numSegments'  : 9,     // Specify number of segments.
+            'numSegments'  : 10,     // Specify number of segments.
             'outerRadius'  : 212,   // Set outer radius so wheel fits inside the background.
-            'textFontSize' : 20,    // Set font size as desired.
+            'textFontSize' : 15,    // Set font size as desired.
+            'textFillStyle': 'white', 
             'segments'     :        // Define segments including colour and text.
             [
-               {'fillStyle' : '#eae56f', 'text' : 'Uống hết'},
-               {'fillStyle' : '#89f26e', 'text' : 'Bên trái uống'},
-               {'fillStyle' : '#7de6ef', 'text' : 'Bên phải uống'},
-               {'fillStyle' : '#e7706f', 'text' : 'Trái giúp nửa'},
-               {'fillStyle' : '#eae56f', 'text' : 'Phải giúp nửa'},
-               {'fillStyle' : '#89f26e', 'text' : 'Thoát nạn'},
-               {'fillStyle' : '#7de6ef', 'text' : 'Chọn uống cùng'},
-               {'fillStyle' : '#e7706f', 'text' : 'Quay lại'},
-               {'fillStyle' : '#e7706f', 'text' : 'Cả bàn lên'},
+               {'fillStyle' : '#c0392b', 'text' : 'Uống hết sạch'},
+               {'fillStyle' : '#8e44ad', 'text' : 'Người bên trái dính'},
+               {'fillStyle' : '#c0392b', 'text' : 'Uống hết sạch'},
+               {'fillStyle' : '#2980b9', 'text' : 'Bên phải chia đôi niềm vui'},
+               {'fillStyle' : '#27ae60', 'text' : 'Thoát nạn'},
+
+               {'fillStyle' : '#c0392b', 'text' : 'Uống hết sạch'},
+               {'fillStyle' : '#8e44ad', 'text' : 'Chọn người chết cùng'},
+               {'fillStyle' : '#c0392b', 'text' : 'Uống hết sạch'},
+               {'fillStyle' : '#2980b9', 'text' : 'Bỏ đá rót đầy ly'},
+               {'fillStyle' : '#27ae60', 'text' : 'Thêm lượt quay'},
             ],
             'animation' :           // Specify the animation to use.
             {
                 'type'     : 'spinToStop',
-                'duration' : 15,
+                'duration' : 10,
                 'spins'    : 8,
                 'callbackFinished' : alertPrize,
                 'callbackSound'    : playSound,   // Function to call when the tick sound is to be triggered.
@@ -59,7 +65,7 @@
             },
             'pins' :
             {
-                'number' : 9   // Number of pins. They space evenly around the wheel.
+                'number' : 10   // Number of pins. They space evenly around the wheel.
             }
         });
 
@@ -87,7 +93,9 @@
         {
             // Do basic alert of the segment text.
             // You would probably want to do something more interesting with this information.
-            console.log("You have won " + indicatedSegment.text);
+            //console.log(indicatedSegment.text);
+            $(".result").show();
+            $(".result-text").html(indicatedSegment.text);
         }
 
         // =======================================================================================================================
@@ -140,6 +148,7 @@
         // -------------------------------------------------------
         function startSpin()
         {
+            $(".result").hide();
             // Ensure that spinning can't be clicked again while already running.
             if (wheelSpinning == false)
             {
