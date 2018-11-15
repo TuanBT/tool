@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Studio Code</title>
+</head>
+
+<body>
+
+    <viewer-pdf-toolbar id="toolbar" style="transform-origin: 50% 0px 0px; transform: translateY(-100%);"></viewer-pdf-toolbar>
+    
+    <div id="sizer" style="width: 1066px; height: 882px;"></div>
+    <viewer-password-screen id="password-screen"></viewer-password-screen>
+    
+    <viewer-zoom-toolbar id="zoom-toolbar" style="right: 0px; bottom: 0px;"></viewer-zoom-toolbar>
+    
+    <viewer-page-indicator id="page-indicator"></viewer-page-indicator>
+    
+    <viewer-error-screen id="error-screen"></viewer-error-screen>
+    
+    
+    <script src="pdf_fitting_type.js"></script>
+    <script src="toolbar_manager.js"></script>
+    <script src="viewport.js"></script>
+    <script src="open_pdf_params_parser.js"></script>
+    <script src="navigator.js"></script>
+    <script src="viewport_scroller.js"></script>
+    <script src="zoom_manager.js"></script>
+    <script src="gesture_detector.js"></script>
+    <script src="pdf_scripting_api.js"></script>
+    <script src="chrome://resources/js/util.js"></script>
+    <script src="browser_api.js"></script>
+    <script src="coords_transformer.js"></script>
+    <script src="metrics.js"></script>
+    <script src="pdf_viewer.js"></script>
+    <script src="main.js"></script>
+    
+    <embed id="plugin" type="application/x-google-chrome-pdf" src="https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf" stream-url="blob:chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/f8098ed8-cf22-4f81-b0ba-43a0e6bbba3a" headers="Accept-Ranges: bytes
+    Cache-Control: public, max-age=0
+    Content-Length: 423917
+    Content-Type: application/pdf
+    Date: Tue, 13 Nov 2018 16:25:21 GMT
+    ETag: W/&quot;677ed-166eb74d584&quot;
+    Last-Modified: Tue, 06 Nov 2018 23:56:34 GMT
+    Server: Microsoft-IIS/10.0
+    Strict-Transport-Security: max-age=31536000
+    X-Content-Type-Options: nosniff
+    X-Powered-By: ASP.NET
+    X-XSS-Protection: 1; mode=block
+    x-frame-options: SAMEORIGIN
+    " background-color="0xFF525659" top-toolbar-height="56" javascript="allow" full-frame=""></body>
+
+</html>

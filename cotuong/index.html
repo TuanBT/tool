@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.w3.org/1999/xhtml" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Cờ tướng</title>
+  <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+</head>
+<style>
+  body{
+    margin: 0;
+    background: black;
+  }
+  .chess-area{
+    text-align: center;
+    background: black;
+  }
+</style>
+
+<script>
+  function resize() {
+    var vid_width = 800;
+    var vid_height = 615;
+    var width = $(window).width();
+    var height = $(window).height();
+
+    var scale_factorH = (height) / vid_height;
+    vid_height = vid_height * scale_factorH;
+    vid_width = vid_width * scale_factorH;
+
+    $('object').attr('width', vid_width);
+    $('object').attr('height', vid_height);
+
+    $('object embed').attr('width', vid_width);
+    $('object embed').attr('height', vid_height);
+  }
+
+  $(window).resize(function () {
+    resize();
+  });
+</script>
+
+<body>
+  <noscript>
+    <div class="alert alert-danger">Trình duyệt của bạn đã tắt chức năng hỗ trợ JavaScript.<br />Website chỉ làm việc
+      khi bạn bật nó trở lại.<br />Để tham khảo cách bật JavaScript, hãy click chuột <a href="http://wiki.nukeviet.vn/support:browser:enable_javascript">vào
+        đây</a>!</div>
+  </noscript>
+  <div class="chess-area"> <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" height="615" width="800">
+      <param name="quality" value="high">
+      <param name="movie" value="game-co-tuong.swf"><embed id="flash" height="615" width="800" pluginspage="http://www.macromedia.com/go/getflashplayer"
+        quality="high" src="game-co-tuong.swf" type="application/x-shockwave-flash"></object></div>
+  </div>
+</body>
+<script type="text/javascript">
+  resize();
+</script>
+
+</html>
