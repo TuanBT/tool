@@ -13,6 +13,7 @@ firebase.initializeApp(config);
 var ref = firebase.database().ref();
 var pathData;
 var lastID;
+var id;
 
 ref.on("value", function (snapshot) {
     //Draw Family Tree
@@ -21,32 +22,37 @@ ref.on("value", function (snapshot) {
 
     //Show node detail
     $(".nodeDetail").click(function () {
-        var id = parseInt($(this).find(".node-ID").text());
-        var nodeData = jsonPath(snapshot.val(), "$.[?(@.ID == " + id + ")]");
+        id = parseInt($(this).find(".node-ID").text());
+        var nodeData = jsonPath(snapshot.val(), "$.[?(@.personID == " + id + ")]");
 
-        pathData = jsonPath(snapshot.val(), "$.[?(@.ID == " + id + ")]", { resultType: "PATH" }).toString();
+        pathData = jsonPath(snapshot.val(), "$.[?(@.personID == " + id + ")]", { resultType: "PATH" }).toString();
         pathData = pathData.replaceAll('$', '');
         pathData = pathData.replaceAll('\'', '');
         pathData = pathData.replaceAll('][', '\/');
         pathData = pathData.replaceAll('[', '');
-        pathData = pathData.replaceAll(']', '');
-        console.log("nodeDetalClick: " + pathData);
+        pathData = pathData.replaceAll(']', '/');
+        // console.log("nodeDetalClick: " + pathData);
 
         if (nodeData != null) {
             var data = nodeData[0];
 
             //Add to view detail
-            $("p.nodeName").html(data.name);
-            $("p.nodeGender").html(data.gender);
-            $("p.nodeBirthday").html(data.birthday);
-            $("p.nodeSpouse").html(data.spouse);
+            $("p.nodeName").html(data.text.name);
+            $("p.nodeGender").html(data.text.gender);
+            $("p.nodeBirthday").html(data.text.birthday);
+            $("p.nodeSpouse").html(data.text.spouse);
+            $("p.nodeDirect").html(data.HTMLclass != "" ? "true" : "false");
 
             //Add to view edit detail
-            $("input[name=nodeName]").val(data.name);
-            $("input[name=nodeGender][value=" + data.gender + "]").prop('checked', true);
-            $("input[name=nodeBirthday]").val(data.birthday);
-            $("input[name=nodeSpouse]").val(data.spouse);
-
+            $("input[name=nodeName]").val(data.text.name);
+            $("input[name=nodeGender][value=" + data.text.gender + "]").prop('checked', true);
+            $("input[name=nodeBirthday]").val(data.text.birthday);
+            $("input[name=nodeSpouse]").val(data.text.spouse);
+            if (data.HTMLclass != "") {
+                $("input[name=nodeDirect]").prop('checked', true);
+            } else {
+                $("input[name=nodeDirect]").prop('checked', false);
+            }
         }
     });
 })
@@ -59,13 +65,19 @@ $(document).ready(function () {
         var nodeGender = $('input[name=nodeGender]:checked').val();
         var nodeBirthday = $("input[name=nodeBirthday]").val();
         var nodeSpouse = $("input[name=nodeSpouse]").val();
-        var textRef = firebase.database().ref(pathData);
-        textRef.update({
-            "name": nodeName,
-            "spouse": nodeSpouse,
-            "gender": nodeGender,
-            "birthday": nodeBirthday,
-        });
+        var nodeDirect = $('input[name=nodeDirect]:checked').val();
+        firebase.database().ref(pathData).update(
+            {
+                HTMLclass: nodeDirect ? nodeGender : "",
+                text: {
+                    ID: id,
+                    name: nodeName,
+                    spouse: nodeSpouse,
+                    gender: nodeGender,
+                    birthday: nodeBirthday,
+                }
+            }
+        );
     });
 
     //Add a node
@@ -75,22 +87,23 @@ $(document).ready(function () {
         var nodeGender = $('input[name=nodeGenderAdd]:checked').val();
         var nodeBirthday = $("input[name=nodeBirthdayAdd]").val();
         var nodeSpouse = $("input[name=nodeSpouseAdd]").val();
-        var pathDataParent = pathData.slice(0, -4);
-        console.log("btnAddNode" + pathDataParent);
+        var nodeDirect = $('input[name=nodeDirectAdd]:checked').val();
 
-        ref.child(pathDataParent + "children/").once("value", function (snapshot) {
+        ref.child(pathData + "children/").once("value", function (snapshot) {
             var numChild = snapshot.numChildren();
-            console.log("btnAddNode Numberchild: " + numChild);
-            var textRef = firebase.database().ref(pathDataParent).child('children/' + numChild);
+            // console.log("btnAddNode Numberchild: " + numChild);
+            var textRef = firebase.database().ref(pathData).child('children/' + numChild);
             textRef.set({
+                HTMLclass: nodeDirect?nodeGender:"",
+                personID: nodeID,
                 text: {
                     ID: nodeID,
-                    name: nodeName,
+                    name: nodeName, 
                     spouse: nodeSpouse,
                     gender: nodeGender,
                     birthday: nodeBirthday,
                 },
-                HTMLclass: nodeGender,
+
             });
 
             firebase.database().ref().update({
