@@ -67,10 +67,10 @@ $(document).ready(function () {
     $("#btnAddNode").click(function () {
         ref.child(pathData + "children/").once("value", function (snapshot) {
             var nodeID = lastID + 1;
-            var nodeName = "Tên " + nodeID;
+            var nodeName = nodeID;
             var nodeGender = "male";
-            var nodeBirthday = "30-01-1900";
-            var nodeSpouse = "Tên bạn đời";
+            var nodeBirthday = "";
+            var nodeSpouse = "";
             var nodeDirect = "";
             var numChild = snapshot.numChildren();
             // console.log("btnAddNode Numberchild: " + numChild);
@@ -95,7 +95,8 @@ $(document).ready(function () {
                     lastID: nodeID
                 }
             });
-            clickNodeId(nodeID);
+            id = nodeID;
+            clickNodeId(id);
         });
     });
 
@@ -136,7 +137,7 @@ $(document).ready(function () {
     $("#btnShow").click(function () {
         $("#function-panel").hide();
         $("#info-panel").show();
-        $(".chart").css("margin-left", "300px");
+        $(".chart").css("margin-left", "250px");
     })
 });
 

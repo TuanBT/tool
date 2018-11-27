@@ -6,7 +6,7 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, 
 table {
     border-collapse: collapse;
     border-spacing: 0;
-    width: 300px;
+    width: 250px;
 }
 
 fieldset, img {
@@ -41,8 +41,7 @@ abbr, acronym {
     display: none;
     position: fixed;
     padding-bottom: 10px;
-    width: 300px;
-    /* height: 100%; */
+    width: 250px;
     border-right: #7f8c8d solid 1px;
     border-bottom: #7f8c8d solid 1px;
     z-index: 1;

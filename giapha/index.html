@@ -22,28 +22,32 @@
                 <tbody>
                     <tr>
                         <td>Tên:</td>
-                        <td><input class="form-control nodeInfo" type="text" placeholder="Nhập tên" name="nodeName" /></td>
+                        <td><input class="form-control nodeInfo" type="text" placeholder="Tên" name="nodeName" /></td>
                     </tr>
                     <tr>
-                        <td>Giới tính:</td>
+                        <td>Giới:</td>
                         <td>
-                            <input type="radio" name="nodeGender" value="male"> Nam<br>
-                            <input type="radio" name="nodeGender" value="female"> Nữ<br>
+                            <label class="checkbox-inline">
+                                <input type="radio" name="nodeGender" value="male"> Nam
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" name="nodeGender" value="female"> Nữ
+                            </label>
                         </td>
                     </tr>
                     <tr>
-                        <td>Năm sinh:</td>
-                        <td><input class="form-control nodeInfo" type="text" placeholder="Nhập năm sinh" name="nodeBirthday" /></td>
+                        <td>Sinh:</td>
+                        <td><input class="form-control nodeInfo" type="text" placeholder="Năm sinh" name="nodeBirthday" /></td>
                     </tr>
 
                     <tr>
                     <tr>
-                        <td>Vợ/Chồng:</td>
-                        <td><input class="form-control nodeInfo" type="text" placeholder="Nhập tên Vợ/Chồng" name="nodeSpouse" /></td>
+                        <td>Lấy:</td>
+                        <td><input class="form-control nodeInfo" type="text" placeholder="Tên Vợ/Chồng" name="nodeSpouse" /></td>
                     </tr>
                     <tr>
-                        <td>Trực hệ:</td>
-                        <td><input type="checkbox" name="nodeDirect" value="true" checked></td>
+                        <td>Nội:</td>
+                        <td><input type="checkbox" name="nodeDirect" value="true" placeholder="Trực hệ" checked> Trực hệ</td>
                     </tr>
 
                     </tr>
@@ -57,7 +61,7 @@
         </div>
     </div>
     <div id="function-panel">
-            <button type="button" class="btn btn-primary slidedown" value="Show" id="btnShow">Hiện</button>
+        <button type="button" class="btn btn-primary slidedown" value="Show" id="btnShow">Hiện</button>
     </div>
     <div class="chart" id="custom-colored">.....................xin chờ</div>
 
