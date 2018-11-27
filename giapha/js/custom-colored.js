@@ -66,17 +66,18 @@ $(document).ready(function () {
     //Add a node
     $("#btnAddNode").click(function () {
         ref.child(pathData + "children/").once("value", function (snapshot) {
+            var nodeData = jsonPath(globalSnapshot.val(), "$.[?(@.personID == " + id + ")]")[0];
             var nodeID = lastID + 1;
             var nodeName = nodeID;
             var nodeGender = "male";
             var nodeBirthday = "";
             var nodeSpouse = "";
-            var nodeDirect = "";
+            var nodeDirect = nodeData.HTMLclass == "male" ? "male" : "";
             var numChild = snapshot.numChildren();
             // console.log("btnAddNode Numberchild: " + numChild);
             firebase.database().ref(pathData).child('children/' + numChild).set(
                 {
-                    HTMLclass: nodeDirect ? nodeGender : "",
+                    HTMLclass: nodeDirect,
                     personID: nodeID,
                     text: {
                         ID: nodeID,
