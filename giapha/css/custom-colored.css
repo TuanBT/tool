@@ -6,6 +6,7 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, 
 table {
     border-collapse: collapse;
     border-spacing: 0;
+    width: 300px;
 }
 
 fieldset, img {
@@ -34,13 +35,23 @@ abbr, acronym {
     border: 0;
 }
 
-/* Tab Style*/
+/* info-panel Style*/
 
-.tab {
-    position: absolute;
-    background: aquamarine;
-    width: 200px;
-    height: 100%;
+#info-panel {
+    display: none;
+    position: fixed;
+    padding-bottom: 10px;
+    width: 300px;
+    /* height: 100%; */
+    border-right: #7f8c8d solid 1px;
+    border-bottom: #7f8c8d solid 1px;
+    z-index: 1;
+    background: white;
+}
+
+#function-panel{
+    position: fixed;
+    z-index: 1;
 }
 
 /* optional Container STYLES */
@@ -49,7 +60,7 @@ abbr, acronym {
     /* height: 550px;
     margin: 5px;
     width: 900px; */
-    margin-left: 200px;
+    margin-left: 0px;
     /* background: #F5A9B8; */
 }
 
@@ -101,3 +112,265 @@ abbr, acronym {
 .nodeDetail img {
     margin-right: 10px;
 }
+
+.nodeView, .nodeAdd{
+    display: none;
+}
+
+#btnDeleteNode, #btnAddNode, #btnUpdateNode, #btnSwapp{
+    display: none;
+}
+
+.table-user-information > tbody > tr {
+    border-top: 1px solid rgb(221, 221, 221);
+}
+
+.table-user-information > tbody > tr:first-child {
+    border-top: 0;
+}
+
+
+.table-user-information > tbody > tr > td {
+    border-top: 0;
+}
+
+
+.btn{
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+    transition: all .5s;
+  }
+  /* //// Default effect: Slide from Top  //// */
+  .btn:before,
+  .btn:after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    z-index: -1;
+    transition: all .5s;
+  }
+  .btn:hover{
+      color: white;
+  }
+  .btn:hover:after{
+    transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  .btn-primary:before{
+    background: #007bff; /* button default background color */
+  }
+  .btn-primary:after{
+    background: #0000005a;
+  }
+  .btn-primary:hover{
+    background: #025ec1;
+  }
+  .btn-secondary:before{
+    background: #6c757d;
+    z-index: -2;
+  }
+  .btn-secondary:after{
+    background: #5a6268;
+  }
+  .btn-secondary:hover{
+    background: #5a6268;
+  }
+  .btn-success:before{
+    background: #28a745;
+    z-index: -2;
+  }
+  .btn-success:after{
+    background: #218838;
+  }
+  .btn-success:hover{
+    background: #218838;
+  }
+  .btn-danger:before{
+    background: #dc3545;
+  }
+  .btn-danger:after{
+    background: #c82333;
+  }
+  .btn-danger:hover{
+    background: #c82333;
+  }
+  .btn-warning:before{
+    background: #ffc107;
+  }
+  .btn-warning:after{
+    background: #e0a800;
+  }
+  .btn-warning:hover{
+    background: #e0a800;
+  }
+  .btn-info:before{
+    background: #17a2b8;
+  }
+  .btn-info:after{
+    background: #138496;
+  }
+  .btn-info:hover{
+    background: #138496;
+  }
+  .btn-light:before{
+    background: #f8f9fa;
+  }
+  .btn-light:after{
+    background: #e2e6ea;
+    color:#212529;
+  }
+  .btn-light:hover{
+    background: #e2e6ea;
+    color:#212529;
+  }
+  .btn-dark:before{
+    background: #6c757d;
+  }
+  .btn-dark:after{
+    background: #23272b;
+  }
+  .btn-dark:hover{
+    background: #23272b;
+  }
+  .btn-link:hover{
+    color: #007bff;
+  }
+  /* //// Outline Buttons  //// */
+  .btn-outline-primary:after{
+    background: #007bff;
+  }
+  .btn-outline-primary:hover{
+    background: #007bff;
+  }
+  .btn-outline-secondary:after{
+    background: #6c757d;
+  }
+  .btn-outline-secondary:hover{
+    background: #6c757d;
+  }
+  .btn-outline-success:after{
+    background: #28a745;
+  }
+  .btn-outline-success:hover{
+    background: #28a745;
+  }
+  .btn-outline-danger:after{
+    background: #dc3545;
+  }
+  .btn-outline-danger:hover{
+    background: #dc3545;
+  }
+  .btn-outline-warning:after{
+    background: #ffc107;
+  }
+  .btn-outline-warning:hover{
+    background: #ffc107;
+  }
+  .btn-outline-info:after{
+    background: #17a2b8;
+  }
+  .btn-outline-info:hover{
+    background: #17a2b8;
+  }
+  .btn-outline-light{
+    color:#212529;
+  }
+  .btn-outline-light:after{
+    background: #e2e6ea;
+    color:#212529;
+  }
+  .btn-outline-light:hover{
+    background: #e2e6ea;
+    color:#212529;
+  }
+  .btn-outline-dark:after{
+    background: #343a40;
+  }
+  .btn-outline-dark:hover{
+    background: #343a40;
+  }
+  /* //// Slide Left  //// */
+  
+  .slideright:after{
+    top: 0;
+    z-index: -1;
+    transform: translate3D(-101%,0,0);
+  }
+  
+  .slideright:hover:after{
+    transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  /* //// Slide Right  //// */
+  
+  .slideleft:after{
+    top: 0;
+    z-index: -1;
+    transform: translate3D(101%,0,0);
+  }
+  .slideleft:hover:after{
+    transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  /* //// Slide Up  //// */
+  .slideup:after{
+    top: 0;
+    z-index: -1;
+        transform: translate3D(0,100%,0); /* move elements above button so they don't appear initially */
+    transition: all .5s;/* onhover background color */
+  }
+  
+  .slideup:hover:after{
+    transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  /* //// Slide Down  //// */
+  .slidedown:after{
+    top: 0;
+    z-index: -1;
+        transform: translate3D(0,-100%,0); /* move elements above button so they don't appear initially */
+    transition: all .5s;/* onhover background color */
+  }
+  
+  .slidedown:hover:after{
+    transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  /* //// Slide Top Left //// */
+  .slidetopleft:after{
+    transform: translate3D(100%,-100%,0);
+  }
+  .slidetopleft:hover:after{
+      transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  /* //// Slide Corner Right //// */
+  .slidetopright:after{
+    transform: translate3D(-100%,-100%,0);
+  }
+  .slidetopright:hover:after{
+      transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  
+  /* //// Slide Corner Left //// */
+  .slidebottomleft:after{
+    transform: translate3D(100%,100%,0);
+  }
+  .slidebottomleft:hover:after{
+      transform: translate3D(0,0,0);
+    transition: all .5s;
+  }
+  /* //// Slide Corner Right //// */
+  .slidebottomright:after{
+    transform: translate3D(-100%,100%,0);
+  }
+  .slidebottomright:hover:after{
+      transform: translate3D(0,0,0);
+    transition: all .5s;
+  }

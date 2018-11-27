@@ -14,53 +14,26 @@ var ref = firebase.database().ref();
 var pathData;
 var lastID;
 var id;
+var preId;
+var globalSnapshot;
 
 ref.on("value", function (snapshot) {
     //Draw Family Tree
     new Treant(snapshot.val());
     lastID = snapshot.val().config.lastID;
+    globalSnapshot = snapshot;
 
     //Show node detail
     $(".nodeDetail").click(function () {
+        preId = id;
         id = parseInt($(this).find(".node-ID").text());
-        var nodeData = jsonPath(snapshot.val(), "$.[?(@.personID == " + id + ")]");
-
-        pathData = jsonPath(snapshot.val(), "$.[?(@.personID == " + id + ")]", { resultType: "PATH" }).toString();
-        pathData = pathData.replaceAll('$', '');
-        pathData = pathData.replaceAll('\'', '');
-        pathData = pathData.replaceAll('][', '\/');
-        pathData = pathData.replaceAll('[', '');
-        pathData = pathData.replaceAll(']', '/');
-        // console.log("nodeDetalClick: " + pathData);
-
-        if (nodeData != null) {
-            var data = nodeData[0];
-
-            //Add to view detail
-            $("p.nodeName").html(data.text.name);
-            $("p.nodeGender").html(data.text.gender);
-            $("p.nodeBirthday").html(data.text.birthday);
-            $("p.nodeSpouse").html(data.text.spouse);
-            $("p.nodeDirect").html(data.HTMLclass != "" ? "true" : "false");
-
-            //Add to view edit detail
-            $("input[name=nodeName]").val(data.text.name);
-            $("input[name=nodeGender][value=" + data.text.gender + "]").prop('checked', true);
-            $("input[name=nodeBirthday]").val(data.text.birthday);
-            $("input[name=nodeSpouse]").val(data.text.spouse);
-            if (data.HTMLclass != "") {
-                $("input[name=nodeDirect]").prop('checked', true);
-            } else {
-                $("input[name=nodeDirect]").prop('checked', false);
-            }
-        }
+        clickNodeId(id);
     });
 })
 
 $(document).ready(function () {
-
     //Update node
-    $("#btnUpdateNode").click(function () {
+    function updateNode() {
         var nodeName = $("input[name=nodeName]").val();
         var nodeGender = $('input[name=nodeGender]:checked').val();
         var nodeBirthday = $("input[name=nodeBirthday]").val();
@@ -77,46 +50,175 @@ $(document).ready(function () {
                     birthday: nodeBirthday,
                 }
             }
-        );
-    });
+        )
+    }
+
+    $("input.nodeInfo").focusout(function () {
+        updateNode();
+    })
+    $('input[name=nodeGender]').change(function () {
+        updateNode();
+    })
+    $('input[name=nodeDirect]').change(function () {
+        updateNode();
+    })
 
     //Add a node
     $("#btnAddNode").click(function () {
-        var nodeID = lastID + 1;
-        var nodeName = $("input[name=nodeNameAdd]").val();
-        var nodeGender = $('input[name=nodeGenderAdd]:checked').val();
-        var nodeBirthday = $("input[name=nodeBirthdayAdd]").val();
-        var nodeSpouse = $("input[name=nodeSpouseAdd]").val();
-        var nodeDirect = $('input[name=nodeDirectAdd]:checked').val();
-
         ref.child(pathData + "children/").once("value", function (snapshot) {
+            var nodeID = lastID + 1;
+            var nodeName = "Tên " + nodeID;
+            var nodeGender = "male";
+            var nodeBirthday = "30-01-1900";
+            var nodeSpouse = "Tên bạn đời";
+            var nodeDirect = "";
             var numChild = snapshot.numChildren();
             // console.log("btnAddNode Numberchild: " + numChild);
-            var textRef = firebase.database().ref(pathData).child('children/' + numChild);
-            textRef.set({
-                HTMLclass: nodeDirect?nodeGender:"",
-                personID: nodeID,
-                text: {
-                    ID: nodeID,
-                    name: nodeName, 
-                    spouse: nodeSpouse,
-                    gender: nodeGender,
-                    birthday: nodeBirthday,
-                },
+            firebase.database().ref(pathData).child('children/' + numChild).set(
+                {
+                    HTMLclass: nodeDirect ? nodeGender : "",
+                    personID: nodeID,
+                    text: {
+                        ID: nodeID,
+                        name: nodeName,
+                        spouse: nodeSpouse,
+                        gender: nodeGender,
+                        birthday: nodeBirthday,
+                        children: [],
+                    },
 
-            });
+                }
+            );
 
             firebase.database().ref().update({
                 config: {
                     lastID: nodeID
                 }
             });
-
+            clickNodeId(nodeID);
         });
     });
+
+    //Delete a node
+    $("#btnDeleteNode").click(function () {
+        firebase.database().ref(pathData).remove();
+        $("#btnDeleteNode").hide();
+        //Show detail of root
+        clickNodeId(1);
+    });
+
+    //Swapp a node
+    $("#btnSwapp").click(function () {
+        var nodeDataPre = jsonPath(globalSnapshot.val(), "$.[?(@.personID == " + preId + ")]")[0];
+        var nodeData = jsonPath(globalSnapshot.val(), "$.[?(@.personID == " + id + ")]")[0];
+        var pathDataPre = jsonPath(globalSnapshot.val(), "$.[?(@.personID == " + preId + ")]", { resultType: "PATH" }).toString();
+        pathDataPre = convertJsonPath2FirePath(pathDataPre);
+        firebase.database().ref(pathData).set(
+            nodeDataPre
+        );
+        firebase.database().ref(pathDataPre).set(
+            nodeData
+        );
+
+        $("#btnSwapp").hide();
+
+    })
+
+    //Hide info panel
+    $("#btnHide").click(function () {
+        $("#info-panel").hide();
+        $(".chart").css("margin-left", "0px");
+        $("#info-panel").hide();
+        $("#function-panel").show();
+    })
+
+    //Show info panel
+    $("#btnShow").click(function () {
+        $("#function-panel").hide();
+        $("#info-panel").show();
+        $(".chart").css("margin-left", "300px");
+    })
 });
 
+function convertJsonPath2FirePath(inStr) {
+    var str = inStr;
+    str = str.replaceAll('$', '');
+    str = str.replaceAll('\'', '');
+    str = str.replaceAll('][', '\/');
+    str = str.replaceAll('[', '');
+    str = str.replaceAll(']', '/');
+    return str;
+}
 
+function clickNodeId(id) {
+    var snapshot = globalSnapshot;
+    var nodeData = jsonPath(snapshot.val(), "$.[?(@.personID == " + id + ")]");
+
+    pathData = jsonPath(snapshot.val(), "$.[?(@.personID == " + id + ")]", { resultType: "PATH" }).toString();
+    pathData = convertJsonPath2FirePath(pathData);
+    // console.log("nodeDetalClick: " + pathData);
+
+    $("#btnAddNode").show();
+
+    if (preId == undefined || id == undefined || preId == id) {
+        $("#btnSwapp").hide();
+    } else {
+        $("#btnSwapp").show();
+    }
+
+    if (nodeData != undefined) {
+        var data = nodeData[0];
+
+        //Add to view edit detail
+        $("input[name=nodeName]").val(data.text.name);
+        $("input[name=nodeGender][value=" + data.text.gender + "]").prop('checked', true);
+        $("input[name=nodeBirthday]").val(data.text.birthday);
+        $("input[name=nodeSpouse]").val(data.text.spouse);
+        if (data.HTMLclass != "") {
+            $("input[name=nodeDirect]").prop('checked', true);
+        } else {
+            $("input[name=nodeDirect]").prop('checked', false);
+        }
+    }
+
+    //Show button delete or not
+    $("#btnDeleteNode").hide();
+    var array = pathData.replaceAll("/", ".").split(".");
+    var strJsonPath = "";
+    for (var i = 0; i < array.length - 2; i++) {
+        strJsonPath = strJsonPath + array[i];
+        if (i < array.length - 3) {
+            strJsonPath = strJsonPath + ".";
+        }
+    }
+    //Get the node last
+    strJsonPath = strJsonPath + "[(@.length-1)]";
+    var nodeData = jsonPath(snapshot.val(), strJsonPath)[0];
+    ref.child(pathData).once("value", function (snapshot) {
+        if (snapshot.val().children === undefined && nodeData.personID == snapshot.val().personID) {
+            $("#btnDeleteNode").show();
+        }
+    });
+
+    //Show button delete or not
+    $("#btnDeleteNode").hide();
+    var array = pathData.replaceAll("/", ".").split(".");
+    var strJsonPath = "";
+    for (var i = 0; i < array.length - 2; i++) {
+        strJsonPath = strJsonPath + array[i];
+        if (i < array.length - 3) {
+            strJsonPath = strJsonPath + ".";
+        }
+    }
+    //Get the node last
+    strJsonPath = strJsonPath + "[(@.length-1)]";
+    var nodeData = jsonPath(snapshot.val(), strJsonPath)[0];
+    ref.child(pathData).once("value", function (snapshot) {
+        if (snapshot.val().children === undefined && nodeData.personID == snapshot.val().personID) {
+            $("#btnDeleteNode").show();
+        }
+    });
+}
 
 
 // Replaces all instances of the given substring.
@@ -141,513 +243,56 @@ String.prototype.replaceAll = function (
     // replaced out with the new substring.
     return (strText);
 }
-/*
-var config = {
-        container: "#custom-colored",
-
-        nodeAlign: "BOTTOM",
-        
-        connectors: {
-            type: 'step'
-        },
-        node: {
-            HTMLclass: 'nodeExample1'
-        }
-    },
-    ceo = {
-        text: {
-            name: "Mark Hill",
-            title: "Chief executive officer",
-            contact: "Tel: 01 213 123 134",
-        },
-        image: "./img/headshots/2.jpg"
-    },
-
-    cto = {
-        parent: ceo,
-        HTMLclass: 'light-gray',
-        text:{
-            name: "Joe Linux",
-            title: "Chief Technology Officer",
-        },
-        image: "./img/headshots/1.jpg"
-    },
-    cbo = {
-        parent: ceo,
-        childrenDropLevel: 2,
-        HTMLclass: 'blue',
-        text:{
-            name: "Linda May",
-            title: "Chief Business Officer",
-        },
-        image: "./img/headshots/5.jpg"
-    },
-    cdo = {
-        parent: ceo,
-        HTMLclass: 'gray',
-        text:{
-            name: "John Green",
-            title: "Chief accounting officer",
-            contact: "Tel: 01 213 123 134",
-        },
-        image: "./img/headshots/6.jpg"
-    },
-    cio = {
-        parent: cto,
-        HTMLclass: 'light-gray',
-        text:{
-            name: "Ron Blomquist",
-            title: "Chief Information Security Officer"
-        },
-        image: "./img/headshots/8.jpg"
-    },
-    ciso = {
-        parent: cto,
-        HTMLclass: 'light-gray',
-        text:{
-            name: "Michael Rubin",
-            title: "Chief Innovation Officer",
-            contact: "we@aregreat.com"
-        },
-        image: "./img/headshots/9.jpg"
-    },
-    cio2 = {
-        parent: cdo,
-        HTMLclass: 'gray',
-        text:{
-            name: "Erica Reel",
-            title: "Chief Customer Officer"
-        },
-        link: {
-            href: "http://www.google.com"
-        },
-        image: "./img/headshots/10.jpg"
-    },
-    ciso2 = {
-        parent: cbo,
-        HTMLclass: 'blue',
-        text:{
-            name: "Alice Lopez",
-            title: "Chief Communications Officer"
-        },
-        image: "./img/headshots/7.jpg"
-    },
-    ciso3 = {
-        parent: cbo,
-        HTMLclass: 'blue',
-        text:{
-            name: "Mary Johnson",
-            title: "Chief Brand Officer"
-        },
-        image: "./img/headshots/4.jpg"
-    },
-    ciso4 = {
-        parent: cbo,
-        HTMLclass: 'blue',
-        text:{
-            name: "Kirk Douglas",
-            title: "Chief Business Development Officer"
-        },
-        image: "./img/headshots/11.jpg"
-    },
-
-    chart_config = [
-        config,
-        ceo,cto,cbo,
-        cdo,cio,ciso,
-        cio2,ciso2,ciso3,ciso4
-    ];*/
-
-// Another approach, same result
-// JSON approach
 
 /*
-text: {
-    name: "name",
-    spouse: "spouse",
-},
-children: [
-    {
-        text: {
-            name: "name",
-            spouse: "spouse",
-        },
+{
+    "chart": {
+      "connectors": {
+        "type": "step"
+      },
+      "container": "#custom-colored",
+      "node": {
+        "HTMLclass": "nodeDetail"
+      },
+      "nodeAlign": "BOTTOM"
     },
-]
-*/
-
-
-var chart_config2 = {
-    chart: {
-        container: "#custom-colored",
-        nodeAlign: "BOTTOM",
-        connectors: {
-            type: 'step'
+    "config": {
+      "lastID": 3
+    },
+    "nodeStructure": {
+      "HTMLclass": "male",
+      "personID": 1,
+      "children": [
+        {
+          "HTMLclass": "male",
+          "personID": 2,
+          "text": {
+            "ID": 2,
+            "birthday": "1990-10-29",
+            "gender": "male",
+            "name": "con 1",
+            "spouse": "Vợ con 1"
+          }
         },
-        node: {
-            HTMLclass: 'nodeDetail'
+        {
+          "HTMLclass": "female",
+          "personID": 3,
+          "text": {
+            "ID": 3,
+            "birthday": "1990-10-29",
+            "gender": "female",
+            "name": "con 2",
+            "spouse": "chong con 2"
+          }
         }
-    },
-    nodeStructure: {
-        text: {
-            ID: "1",
-            name: "Cha ông nội",
-            birthday: "1990-10-29",
-            spouse: "Vợ cha ông nội",
-        },
-        HTMLclass: 'male',
-        children: [
-            {
-                text: {
-                    ID: "2",
-                    name: "Ông nội",
-                    spouse: "Vợ ông nội",
-                },
-                HTMLclass: 'male',
-                children: [
-                    {
-                        text: {
-                            name: "Bùi ... Lễ",
-                            spouse: "... Ngãi",
-                        },
-                        HTMLclass: 'male',
-                        children: [
-                            {
-                                text: {
-                                    name: "Bùi Trung Hiếu",
-                                    spouse: "Thơm",
-                                },
-                                HTMLclass: 'male',
-                                children: [
-                                    {
-                                        text: {
-                                            name: "Con Hiếu 1",
-                                            spouse: "",
-                                        },
-                                        HTMLclass: 'male',
-                                        children: [
-                                            {
-                                                text: {
-                                                    ID: "2",
-                                                    name: "Ông nội",
-                                                    spouse: "Vợ ông nội",
-                                                },
-                                                HTMLclass: 'male',
-                                                children: [
-                                                    {
-                                                        text: {
-                                                            name: "Bùi ... Lễ",
-                                                            spouse: "... Ngãi",
-                                                        },
-                                                        HTMLclass: 'male',
-                                                        children: [
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Trung Hiếu",
-                                                                    spouse: "Thơm",
-                                                                },
-                                                                HTMLclass: 'male',
-                                                                children: [
-                                                                    {
-                                                                        text: {
-                                                                            name: "Con Hiếu 1",
-                                                                            spouse: "",
-                                                                        },
-                                                                        HTMLclass: 'male',
-                                                                    },
-                                                                ]
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        text: {
-                                                            name: "Bùi Tiến Dũng",
-                                                            spouse: "Nguyễn Thị Huế",
-                                                        },
-                                                        HTMLclass: 'male',
-                                                        children: [
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Tiến Tuân",
-                                                                    spouse: "Nguyễn Thị Minh Trang",
-                                                                },
-                                                                HTMLclass: 'male',
-                                                            },
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Thanh Mai",
-                                                                    spouse: "",
-                                                                },
-                                                                HTMLclass: 'female',
-                                                            },
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Ngọc Huyền",
-                                                                    spouse: "",
-                                                                },
-                                                                HTMLclass: 'female',
-                                                            }
-                                                        ]
-                                                    },
-                                                ]
-                                            },
-                                        ]
-                                    },
-                                    {
-                                        text: {
-                                            name: "Con Hiếu 2",
-                                            spouse: "",
-                                        },
-                                        HTMLclass: 'male',
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        text: {
-                            name: "Bùi ... Lễ",
-                            spouse: "... Ngãi",
-                        },
-                        HTMLclass: 'male',
-                        children: [
-                            {
-                                text: {
-                                    name: "Bùi Trung Hiếu",
-                                    spouse: "Thơm",
-                                },
-                                HTMLclass: 'male',
-                                children: [
-                                    {
-                                        text: {
-                                            name: "Con Hiếu 1",
-                                            spouse: "",
-                                        },
-                                        HTMLclass: 'male',
-                                        children: [
-                                            {
-                                                text: {
-                                                    ID: "2",
-                                                    name: "Ông nội",
-                                                    spouse: "Vợ ông nội",
-                                                },
-                                                HTMLclass: 'male',
-                                                children: [
-                                                    {
-                                                        text: {
-                                                            name: "Bùi ... Lễ",
-                                                            spouse: "... Ngãi",
-                                                        },
-                                                        HTMLclass: 'male',
-                                                        children: [
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Trung Hiếu",
-                                                                    spouse: "Thơm",
-                                                                },
-                                                                HTMLclass: 'male',
-                                                                children: [
-                                                                    {
-                                                                        text: {
-                                                                            name: "Con Hiếu 1",
-                                                                            spouse: "",
-                                                                        },
-                                                                        HTMLclass: 'male',
-                                                                    },
-                                                                    {
-                                                                        text: {
-                                                                            name: "Con Hiếu 2",
-                                                                            spouse: "",
-                                                                        },
-                                                                        HTMLclass: 'male',
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        text: {
-                                                            name: "Bùi Tiến Dũng",
-                                                            spouse: "Nguyễn Thị Huế",
-                                                        },
-                                                        HTMLclass: 'male',
-                                                        children: [
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Tiến Tuân",
-                                                                    spouse: "Nguyễn Thị Minh Trang",
-                                                                },
-                                                                HTMLclass: 'male',
-                                                            },
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Thanh Mai",
-                                                                    spouse: "",
-                                                                },
-                                                                HTMLclass: 'female',
-                                                            },
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Ngọc Huyền",
-                                                                    spouse: "",
-                                                                },
-                                                                HTMLclass: 'female',
-                                                            }
-                                                        ]
-                                                    },
-                                                ]
-                                            },
-                                        ]
-                                    },
-                                    {
-                                        text: {
-                                            name: "Con Hiếu 2",
-                                            spouse: "",
-                                        },
-                                        HTMLclass: 'male',
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        text: {
-                            name: "Bùi ... Lễ",
-                            spouse: "... Ngãi",
-                        },
-                        HTMLclass: 'male',
-                        children: [
-                            {
-                                text: {
-                                    name: "Bùi Trung Hiếu",
-                                    spouse: "Thơm",
-                                },
-                                HTMLclass: 'male',
-                                children: [
-                                    {
-                                        text: {
-                                            name: "Con Hiếu 1",
-                                            spouse: "",
-                                        },
-                                        HTMLclass: 'male',
-                                        children: [
-                                            {
-                                                text: {
-                                                    ID: "2",
-                                                    name: "Ông nội",
-                                                    spouse: "Vợ ông nội",
-                                                },
-                                                HTMLclass: 'male',
-                                                children: [
-                                                    {
-                                                        text: {
-                                                            name: "Bùi ... Lễ",
-                                                            spouse: "... Ngãi",
-                                                        },
-                                                        HTMLclass: 'male',
-                                                        children: [
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Trung Hiếu",
-                                                                    spouse: "Thơm",
-                                                                },
-                                                                HTMLclass: 'male',
-                                                                children: [
-                                                                    {
-                                                                        text: {
-                                                                            name: "Con Hiếu 1",
-                                                                            spouse: "",
-                                                                        },
-                                                                        HTMLclass: 'male',
-                                                                    },
-                                                                    {
-                                                                        text: {
-                                                                            name: "Con Hiếu 2",
-                                                                            spouse: "",
-                                                                        },
-                                                                        HTMLclass: 'male',
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        text: {
-                                                            name: "Bùi Tiến Dũng",
-                                                            spouse: "Nguyễn Thị Huế",
-                                                        },
-                                                        HTMLclass: 'male',
-                                                        children: [
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Tiến Tuân",
-                                                                    spouse: "Nguyễn Thị Minh Trang",
-                                                                },
-                                                                HTMLclass: 'male',
-                                                            },
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Thanh Mai",
-                                                                    spouse: "",
-                                                                },
-                                                                HTMLclass: 'female',
-                                                            },
-                                                            {
-                                                                text: {
-                                                                    name: "Bùi Ngọc Huyền",
-                                                                    spouse: "",
-                                                                },
-                                                                HTMLclass: 'female',
-                                                            }
-                                                        ]
-                                                    },
-                                                ]
-                                            },
-                                        ]
-                                    },
-                                    {
-                                        text: {
-                                            name: "Con Hiếu 2",
-                                            spouse: "",
-                                        },
-                                        HTMLclass: 'male',
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        text: {
-                            name: "Bùi Tiến Dũng",
-                            spouse: "Nguyễn Thị Huế",
-                        },
-                        HTMLclass: 'male',
-                        children: [
-                            {
-                                text: {
-                                    name: "Bùi Tiến Tuân",
-                                    spouse: "Nguyễn Thị Minh Trang",
-                                },
-                                HTMLclass: 'male',
-                            },
-                            {
-                                text: {
-                                    name: "Bùi Thanh Mai",
-                                    spouse: "",
-                                },
-                                HTMLclass: 'female',
-                            },
-                            {
-                                text: {
-                                    name: "Bùi Ngọc Huyền",
-                                    spouse: "",
-                                },
-                                HTMLclass: 'female',
-                            }
-                        ]
-                    },
-                ]
-            },
-        ]
+      ],
+      "text": {
+        "ID": 1,
+        "birthday": "1990-10-29",
+        "gender": "male",
+        "name": "Cha ông nội 1",
+        "spouse": "Vợ cha ông nội"
+      }
     }
-};
+  }
+  */

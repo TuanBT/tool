@@ -5,61 +5,67 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <title> Custom colored example </title>
+    <title>Gia phả</title>
+    <script src="lib/treanjs/vendor/jquery.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="lib/treanjs/Treant.css">
     <link rel="stylesheet" href="css/custom-colored.css">
-    <script src="lib/treanjs/vendor/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
     <script src="lib/jsonpath-0.8.0.js"></script>
-    <script></script>
-
 </head>
 
 <body>
-    <div class="tab">
-        <p>Quan hệ với bạn: Bác (Cô dì chú bác cậu mợ)</p>
-        <p>-----------------</p>
-        <p>Tên: <p class="nodeName">Tên</p>
-        <p>Giới tính: <p class="nodeGender">Giới tính</p>
-        <p>Năm sinh: <p class="nodeBirthday">1991</p>
-        <p> Vợ/Chồng: <p class="nodeSpouse">Tên</p> (Có link hoặc edit được)</p>
-        <p>Trực hệ: <p class="nodeDirect">Trực hệ</p>
-        <p>-----------------</p>
-        <p>(Edit tại chỗ được)</p>
-        <p> Tên:<input class="nodeName" type="text" name="nodeName" /></p>
-        <p> Năm sinh:<input class="nodeBirthday" type="text" name="nodeBirthday" /></p>
-        <p> Nam/nữ:
-            <input type="radio" name="nodeGender" value="male"> Nam<br>
-            <input type="radio" name="nodeGender" value="female"> Nữ<br>
-            <p> Chồng/vợ: <input class="nodeSpouse" type="text" name="nodeSpouse" /></p>
-            <p> Trực hệ:<input type="checkbox" name="nodeDirect" value="true" checked></p>
-            <input type="button" value="Update" id="btnUpdateNode">
-            <p>-----------------</p>
-            <p> Thêm con</p>
-            <p> Tên con:<input class="nodeName add" type="text" name="nodeNameAdd"/></p>
-            <p> Năm sinh:<input class="nodeBirthday add" type="text" name="nodeBirthdayAdd"/></p>
-            <p> Nam/nữ:
-                <input type="radio" name="nodeGenderAdd" value="male" checked> Nam<br>
-                <input type="radio" name="nodeGenderAdd" value="female"> Nữ<br>
-                <p> Chồng/vợ: <input  class="nodeSpouse add" type="text" name="nodeSpouseAdd" /></p>
-                <p> Trực hệ:<input type="checkbox" name="nodeDirectAdd" value="true" checked></p>
-                <input type="button" value="Add" id="btnAddNode">
-                <p>-----------------</p>
+    <div class="tab" id="info-panel">
+        <div class="col-md-12 col-lg-12 nodeUpdate">
+            <table class="table table-user-information">
+                <tbody>
+                    <tr>
+                        <td>Tên:</td>
+                        <td><input class="form-control nodeInfo" type="text" placeholder="Nhập tên" name="nodeName" /></td>
+                    </tr>
+                    <tr>
+                        <td>Giới tính:</td>
+                        <td>
+                            <input type="radio" name="nodeGender" value="male"> Nam<br>
+                            <input type="radio" name="nodeGender" value="female"> Nữ<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Năm sinh:</td>
+                        <td><input class="form-control nodeInfo" type="text" placeholder="Nhập năm sinh" name="nodeBirthday" /></td>
+                    </tr>
 
+                    <tr>
+                    <tr>
+                        <td>Vợ/Chồng:</td>
+                        <td><input class="form-control nodeInfo" type="text" placeholder="Nhập tên Vợ/Chồng" name="nodeSpouse" /></td>
+                    </tr>
+                    <tr>
+                        <td>Trực hệ:</td>
+                        <td><input type="checkbox" name="nodeDirect" value="true" checked></td>
+                    </tr>
+
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-dark slideup" value="Hide" id="btnHide">Ẩn</button>
+            <button type="button" class="btn btn-info slideleft" value="Swapp" id="btnSwapp">Đổi</button>
+            <button type="button" class="btn btn-success slideright" value="Add" id="btnAddNode">Thêm</button>
+            <button type="button" class="btn btn-danger slideleft" value="Delete" id="btnDeleteNode">Xoá</button>
+            <button type="button" class="btn btn-warning slidetopright" value="Update" id="btnUpdateNode">Sửa</button>
+        </div>
     </div>
-    <div class="chart" id="custom-colored"> Loading... </div>
-
-
-
-
-
-
+    <div id="function-panel">
+            <button type="button" class="btn btn-primary slidedown" value="Show" id="btnShow">Hiện</button>
+    </div>
+    <div class="chart" id="custom-colored">.....................xin chờ</div>
 
     <script src="lib/treanjs/vendor/raphael.js"></script>
     <script src="lib/treanjs/Treant.js"></script>
     <script src="js/custom-colored.js"></script>
     <script>
-        new Treant(chart_config2);
+        //new Treant(chart_config2);
 
 
 
