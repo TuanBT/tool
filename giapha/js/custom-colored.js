@@ -13,20 +13,23 @@ firebase.initializeApp(config);
 var ref = firebase.database().ref();
 var pathData;
 var pathDataPre;
-var lastID;
 var id;
 var preId;
+var thisEle;
+var thisElempre;
 
 ref.on("value", function (snapshot) {
     //Draw Family Tree
     new Treant(createObject(snapshot.val().tree1.people));
-    lastID = snapshot.val().tree1.lastID;
     tree = snapshot.val();
 
     //Show node detail
     $(".nodeDetail").click(function () {
         preId = id;
-        id = parseInt($(this).find(".node-ID").text());
+        thisElempre = thisEle;
+        id = $(this).find(".node-ID").text();
+        thisEle = this;
+
         clickNodeId(id);
     });
 })
@@ -66,10 +69,9 @@ $(document).ready(function () {
     //Add a node
     $("#btnAddNode").click(function () {
         ref.child(pathData + "children/").once("value", function (snapshot) {
-            var nodeData = jsonPath(tree, "$.[?(@.personID == " + id + ")]")[0];
+            var nodeData = jsonPath(tree, "$.[?(@.hierachy == \"" + id + "\")]")[0];
             var numChild = snapshot.numChildren();
             var hierachyNum = numChild + 1;
-            var nodeID = lastID + 1;
             var nodeName = nodeData.hierachy + "." + hierachyNum;
             var nodeGender = "male";
             var nodeBirthday = "";
@@ -80,9 +82,8 @@ $(document).ready(function () {
                 {
                     hierachy: nodeData.hierachy + "." + hierachyNum,
                     HTMLclass: nodeDirect,
-                    personID: nodeID,
                     text: {
-                        ID: nodeID,
+                        ID: nodeData.hierachy + "." + hierachyNum,
                         name: nodeName,
                         spouse: nodeSpouse,
                         gender: nodeGender,
@@ -93,10 +94,7 @@ $(document).ready(function () {
                 }
             );
 
-            firebase.database().ref("tree1/").update({
-                lastID: nodeID
-            });
-            id = nodeID;
+            id = nodeData.hierachy + "." + hierachyNum;
             clickNodeId(id);
         });
     });
@@ -113,8 +111,8 @@ $(document).ready(function () {
     var nodeDataCur;
     //Swap a node
     $("#btnSwap").click(function () {
-        nodeDataPre = jsonPath(tree, "$.[?(@.personID == " + preId + ")]")[0];
-        nodeDataCur = jsonPath(tree, "$.[?(@.personID == " + id + ")]")[0];
+        nodeDataPre = jsonPath(tree, "$.[?(@.hierachy == \"" + preId + "\")]")[0];
+        nodeDataCur = jsonPath(tree, "$.[?(@.hierachy == \"" + id + "\")]")[0];
 
         var preHierachy = nodeDataPre.hierachy;
         var curHierachy = nodeDataCur.hierachy;
@@ -131,18 +129,6 @@ $(document).ready(function () {
         $("#btnSwap").hide();
 
     })
-
-    // function swapHierachy(objectCur, objectPre) {
-    //     var preHierachy = objectPre.hierachy;
-    //     var curHierachy = objectCur.hierachy;
-
-    //     changeHierachy(objectPre, curHierachy);
-    //     changeHierachy(objectCur, preHierachy);
-
-    //     var nodeDataSwap = [objSwapPre, objSwapCur];
-
-    //     return nodeDataSwap;
-    // }
 
     //Change all hierachy in object and child
     function changeHierachy(object, hierachy) {
@@ -188,7 +174,7 @@ $(document).ready(function () {
     $("#btnShow").click(function () {
         $("#function-panel").hide();
         $("#info-panel").show();
-        $(".chart").css("margin-left", "250px");
+        $(".chart").css("margin-left", "200px");
     })
 });
 
@@ -203,16 +189,20 @@ function convertJsonPath2FirePath(inStr) {
 }
 
 function clickNodeId(id) {
-    var nodeData = jsonPath(tree, "$.[?(@.personID == " + id + ")]");
+    var nodeData = jsonPath(tree, "$.[?(@.hierachy == \"" + id + "\")]");
 
-    pathData = jsonPath(tree, "$.[?(@.personID == " + id + ")]", { resultType: "PATH" }).toString();
+    pathData = jsonPath(tree, "$.[?(@.hierachy == \"" + id + "\")]", { resultType: "PATH" }).toString();
     pathData = convertJsonPath2FirePath(pathData);
-    console.log(pathData);
 
-    pathDataPre = jsonPath(tree, "$.[?(@.personID == " + preId + ")]", { resultType: "PATH" }).toString();
+    console.log(pathData);
+    console.log(id);
+
+    pathDataPre = jsonPath(tree, "$.[?(@.hierachy == \"" + preId + "\")]", { resultType: "PATH" }).toString();
     pathDataPre = convertJsonPath2FirePath(pathDataPre);
 
     $("#btnAddNode").show();
+    $(thisEle).addClass("first-choose");
+    $(thisElempre).removeClass("first-choose");
 
     if (preId == undefined || id == undefined || preId == id) {
         $("#btnSwap").hide();
@@ -250,7 +240,7 @@ function clickNodeId(id) {
     var nodeData = jsonPath(tree, strJsonPath)[0];
     if (nodeData != undefined) {
         ref.child(pathData).once("value", function (snapshot) {
-            if (snapshot.val().children === undefined && nodeData.personID == snapshot.val().personID) {
+            if (snapshot.val().children === undefined && nodeData.hierachy == snapshot.val().hierachy) {
                 $("#btnDeleteNode").show();
             }
 
@@ -272,7 +262,7 @@ function clickNodeId(id) {
     var nodeData = jsonPath(tree, strJsonPath)[0];
     if (nodeData != undefined) {
         ref.child(pathData).once("value", function (snapshot) {
-            if (snapshot.val().children === undefined && nodeData.personID == snapshot.val().personID) {
+            if (snapshot.val().children === undefined && nodeData.hierachy == snapshot.val().hierachy) {
                 $("#btnDeleteNode").show();
             }
         })
@@ -315,16 +305,13 @@ String.prototype.replaceAll = function (
       },
       "nodeAlign": "BOTTOM"
     },
-    "config": {
-      "lastID": 3
-    },
     "nodeStructure": {
       "HTMLclass": "male",
-      "personID": 1,
+      "hierachy": 1,
       "children": [
         {
           "HTMLclass": "male",
-          "personID": 2,
+          "hierachy": 2,
           "text": {
             "ID": 2,
             "birthday": "1990-10-29",
@@ -335,7 +322,7 @@ String.prototype.replaceAll = function (
         },
         {
           "HTMLclass": "female",
-          "personID": 3,
+          "hierachy": 3,
           "text": {
             "ID": 3,
             "birthday": "1990-10-29",
@@ -369,9 +356,6 @@ function createObject(objectTree) {
             },
             "nodeAlign": "BOTTOM"
         },
-        "config": {
-            "lastID": 1
-        },
         "nodeStructure": objectTree
     };
     return object;
@@ -382,11 +366,11 @@ function createObject(objectTree) {
 var objectTree =
 {
     "HTMLclass": "male",
-    "personID": 1,
+    "hierachy": 1,
     "children": [
         {
             "HTMLclass": "male",
-            "personID": 2,
+            "hierachy": 2,
             "text": {
                 "ID": 2,
                 "birthday": "1990-10-29",
