@@ -133,6 +133,7 @@ $(document).ready(function () {
     //Change all hierachy in object and child
     function changeHierachy(object, hierachy) {
         object.hierachy = editHierachy(object.hierachy, hierachy);
+        object.text.ID = editHierachy(object.text.ID, hierachy);
         if (object.children != undefined) {
             for (var i = 0; i < object.children.length; i++) {
                 changeHierachy(object.children[i], hierachy)
