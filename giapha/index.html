@@ -17,6 +17,13 @@
 </head>
 
 <body>
+    <div class="group-function">
+        <button type="button" class="btn btn-primary slidedown" value="Show" id="btnShow"><span class="glyphicon glyphicon-arrow-down"></span></button>
+        <button type="button" class="btn btn-dark slideup" value="Hide" id="btnHide"><span class="glyphicon glyphicon-arrow-up"></span></button>
+        <button type="button" class="btn btn-success slideright" value="Add" id="btnAddNode" disabled><span class="glyphicon glyphicon-plus"></span></button>
+        <button type="button" class="btn btn-info slidedown" value="Swap" id="btnSwapNode" disabled> <span class="glyphicon glyphicon-retweet"></span></button>
+        <button type="button" class="btn btn-danger slideleft" value="Delete" id="btnDeleteNode" disabled><span class="glyphicon glyphicon-remove"></span></button>
+    </div>
     <div class="tab" id="info-panel">
         <div class="col-md-12 col-lg-12 info-detail">
             <table class="table table-user-information">
@@ -32,30 +39,26 @@
                             <label class="checkbox-inline checkLine">
                                 <input type="radio" name="nodeGender" value="female"> Nữ
                             </label>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" name="nodeDirect" value="true" placeholder="Trực hệ" checked>
-                                Nội
-                            </label>
                         </td>
                     </tr>
                     <tr>
                         <td><input class="form-control nodeInfo" type="text" placeholder="Năm sinh" name="nodeBirthday" /></td>
                     </tr>
-
-                    <tr>
                     <tr>
                         <td><input class="form-control nodeInfo" type="text" placeholder="Tên Vợ/Chồng" name="nodeSpouse" /></td>
                     </tr>
                     <tr class="text-center">
                         <td>
-                            <button type="button" class="btn btn-success slideright" value="Add" id="btnAddNode">Thêm</button>
-                            <button type="button" class="btn btn-info slidedown" value="Swap" id="btnSwap">Đổi</button>
-                            <button type="button" class="btn btn-danger slideleft" value="Delete" id="btnDeleteNode">Xoá</button>
+                            <span class="name-pre"></span></br>
+                            <span class="relation-name-pre"></span></br>
+                            <span class="name-cur"></span></br>
                         </td>
                     </tr>
                     <tr class="text-center">
                         <td>
-                            <button type="button" class="btn btn-dark slideup" value="Hide" id="btnHide">Ẩn</button>
+                            <span class="name-cur"></span></br>
+                            <span class="relation-name-cur"></span></br>
+                            <span class="name-pre"></span></br>
                         </td>
                     </tr>
                 </tbody>
@@ -64,10 +67,8 @@
 
         </div>
     </div>
-    <div id="function-panel">
-        <button type="button" class="btn btn-primary slidedown" value="Show" id="btnShow">Hiện</button>
-    </div>
-    <div class="chart" id="custom-colored">.....................xin chờ</div>
+
+    <div class="chart" id="custom-colored"><img class="loading-img" src="img/loading.gif"></div>
 
     <script src="lib/treanjs/vendor/raphael.js"></script>
     <script src="lib/treanjs/Treant.js"></script>
