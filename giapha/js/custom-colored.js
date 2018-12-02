@@ -11,15 +11,23 @@ firebase.initializeApp(config);
 
 // Get a reference to the database service
 var ref = firebase.database().ref();
-var curId;
+
+var curId = "1";
+var preId = "1";
+
 var thisEleCur;
-var pathDataCur;
-var preId;
 var thisElePre;
-var pathDataPre;
-// var prePreId;
 var thisElePrePre;
-// var pathDataPrePre;
+
+var pathDataCur;
+var pathDataPre;
+
+var nodeDataCur;
+var nodeDataPre;
+
+var nodeDataParentCur;
+var nodeDataParentPre;
+
 var male = "male";
 var female = "female";
 var ndmale = "ndmale";
@@ -49,7 +57,7 @@ $(document).ready(function () {
     //Update node
     function updateNode() {
         var nodeName = $("input[name=nodeName]").val();
-        var nodeGender = $('input[name=nodeGender]:checked').val();
+        // var nodeGender = $('input[name=nodeGender]:checked').val();
         var nodeBirthday = $("input[name=nodeBirthday]").val();
         var nodeSpouse = $("input[name=nodeSpouse]").val();
         // var nodeDirect = nodeDirect;
@@ -57,9 +65,10 @@ $(document).ready(function () {
         firebase.database().ref(pathDataCur).update(
             {
                 text: {
+                    ID : nodeDataCur.text.ID,
                     name: nodeName,
                     spouse: nodeSpouse,
-                    gender: nodeGender,
+                    gender: nodeDataCur.text.gender,
                     birthday: nodeBirthday,
                 }
             }
@@ -68,18 +77,17 @@ $(document).ready(function () {
 
     function updateNodeGender() {
         var nodeGender = $('input[name=nodeGender]:checked').val();
-        var nodeData = jsonPath(tree, "$.[?(@.hierachy == \"" + curId + "\")]")[0];
 
-        nodeData.text.gender = nodeGender;
-        if (nodeData.HTMLclass == male || nodeData.HTMLclass == female) {
-            nodeData.HTMLclass = nodeData.text.gender == male ? male : female;
+        nodeDataCur.text.gender = nodeGender;
+        if (nodeDataCur.HTMLclass == male || nodeDataCur.HTMLclass == female) {
+            nodeDataCur.HTMLclass = nodeDataCur.text.gender == male ? male : female;
         } else {
-            nodeData.HTMLclass = nodeData.text.gender == male ? ndmale : ndfemale
+            nodeDataCur.HTMLclass = nodeDataCur.text.gender == male ? ndmale : ndfemale
         }
 
-        changeDirect(nodeData, nodeData.HTMLclass);
+        changeDirect(nodeDataCur, nodeDataCur.HTMLclass);
         firebase.database().ref(pathDataCur).update(
-            nodeData
+            nodeDataCur
         )
     }
 
@@ -139,13 +147,8 @@ $(document).ready(function () {
         clickNodeId(1);
     });
 
-    var nodeDataPre;
-    var nodeDataCur;
     //Swap a node
     $("#btnSwapNode").click(function () {
-        nodeDataPre = jsonPath(tree, "$.[?(@.hierachy == \"" + preId + "\")]")[0];
-        nodeDataCur = jsonPath(tree, "$.[?(@.hierachy == \"" + curId + "\")]")[0];
-
         var preHierachy = nodeDataPre.hierachy;
         var curHierachy = nodeDataCur.hierachy;
 
@@ -267,7 +270,8 @@ function convertJsonPath2FirePath(inStr) {
 }
 
 function clickNodeId(curId) {
-    var nodeData = jsonPath(tree, "$.[?(@.hierachy == \"" + curId + "\")]");
+    nodeDataPre = jsonPath(tree, "$.[?(@.hierachy == \"" + preId + "\")]")[0];
+    nodeDataCur = jsonPath(tree, "$.[?(@.hierachy == \"" + curId + "\")]")[0];
 
     pathDataCur = jsonPath(tree, "$.[?(@.hierachy == \"" + curId + "\")]", { resultType: "PATH" }).toString();
     pathDataCur = convertJsonPath2FirePath(pathDataCur);
@@ -278,20 +282,25 @@ function clickNodeId(curId) {
     pathDataPre = jsonPath(tree, "$.[?(@.hierachy == \"" + preId + "\")]", { resultType: "PATH" }).toString();
     pathDataPre = convertJsonPath2FirePath(pathDataPre);
 
+    var hierachyParentPre = getHiarechyParent(nodeDataPre.hierachy);
+    var hierachyParentCur = getHiarechyParent(nodeDataCur.hierachy);
+    nodeDataParentPre = jsonPath(tree, "$.[?(@.hierachy == \"" + hierachyParentPre + "\")]")[0];
+    nodeDataParentCur = jsonPath(tree, "$.[?(@.hierachy == \"" + hierachyParentCur + "\")]")[0];
+
     $('#btnAddNode').prop("disabled", false);
     $(thisEleCur).addClass("first-choose");
     $(thisElePre).removeClass("first-choose");
     $(thisElePre).addClass("second-choose");
     $(thisElePrePre).removeClass("second-choose");
 
-    if (preId == undefined || curId == undefined || preId == curId || preId.split('.').length != curId.split('.').length) {
+    if (preId == undefined || curId == undefined || preId == curId || curId.toString().length == 1 || preId.split('.').length != curId.split('.').length) {
         $('#btnSwapNode').prop("disabled", true);
     } else {
         $('#btnSwapNode').prop("disabled", false);
     }
 
-    if (nodeData != undefined) {
-        var data = nodeData[0];
+    if (nodeDataCur != undefined) {
+        var data = nodeDataCur;
         //Add to view edit detail
         $("input[name=nodeName]").val(data.text.name);
         $("input[name=nodeGender][value=" + data.text.gender + "]").prop('checked', true);
@@ -316,14 +325,12 @@ function clickNodeId(curId) {
     }
 
     //Show relationShip
-    var nodeDataPre = jsonPath(tree, "$.[?(@.hierachy == \"" + preId + "\")]");
-
-    if (nodeData.length > 0 && nodeDataPre.length > 0) {
-        var relationshipStr = getRelationship(nodeDataPre[0].hierachy, nodeDataPre[0].text.gender, nodeData[0].hierachy, nodeData[0].text.gender);
-        $('.name-pre').html(nodeDataPre[0].text.name);
-        $('.relation-name-pre').html("là " + relationshipStr[0] + " của");
-        $('.relation-name-cur').html("là " + relationshipStr[1] + " của");
-        $('.name-cur').html(nodeData[0].text.name);
+    if (nodeDataPre != undefined) {
+        var relationshipStr = getRelationship(nodeDataPre.hierachy, nodeDataPre.text.gender, nodeDataCur.hierachy, nodeDataCur.text.gender);
+        $('.name-pre').html(nodeDataPre.text.name);
+        $('.name-cur').html(nodeDataCur.text.name);
+        $('.relation-name-pre').html(relationshipStr[0]);
+        $('.relation-name-cur').html(relationshipStr[1]);
     } else {
         $('.name-pre').html("");
         $('.relation-name-pre').html("");
@@ -345,7 +352,7 @@ function clickNodeId(curId) {
 
 }
 
-function getParentHiarechy(hierachy) {
+function getHiarechyParent(hierachy) {
     var arr = hierachy.split('.');
     var str = "";
     if (arr.length > 1) {
@@ -372,8 +379,8 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
     var arrPreLen = arrPre.length;
     var arrCurLen = arrCur.length;
 
-    //>2 cấp
-    if (arrPreLen - arrCurLen >= 2) {
+    //>= 5 cấp
+    if (arrPreLen - arrCurLen >= 5) {
         if (genderCur == male) {
             reCur2Pre = "ông";
         } else {
@@ -385,22 +392,116 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
             rePre2Cur = "cháu gái";
         }
     }
-    if (arrCurLen - arrPreLen >= 2) {
-        if (genderCur == male) {
-            reCur2Pre = "cháu trai";
-        } else {
-            reCur2Pre = "cháu gái";
-        }
+    if (arrCurLen - arrPreLen >= 5) {
         if (genderPre == male) {
             rePre2Cur = "ông";
         } else {
             rePre2Cur = "bà";
         }
+        if (genderCur == male) {
+            reCur2Pre = "cháu trai";
+        } else {
+            reCur2Pre = "cháu gái";
+        }
+    }
+
+    //= 4 cấp
+    if (arrPreLen - arrCurLen == 4) {
+        if (genderCur == male) {
+            reCur2Pre = "ông kỵ";
+        } else {
+            reCur2Pre = "bà kỵ";
+        }
+        if (genderPre == male) {
+            rePre2Cur = "chút trai";
+        } else {
+            rePre2Cur = "chút gái";
+        }
+    }
+    if (arrCurLen - arrPreLen == 4) {
+        if (genderPre == male) {
+            rePre2Cur = "ông kỵ";
+        } else {
+            rePre2Cur = "bà kỵ";
+        }
+        if (genderCur == male) {
+            reCur2Pre = "chút trai";
+        } else {
+            reCur2Pre = "chút gái";
+        }
+    }
+
+    //= 3 cấp
+    if (arrPreLen - arrCurLen == 3) {
+        if (genderCur == male) {
+            reCur2Pre = "ông cố";
+        } else {
+            reCur2Pre = "bà cố";
+        }
+        if (genderPre == male) {
+            rePre2Cur = "chắt trai";
+        } else {
+            rePre2Cur = "chắt gái";
+        }
+    }
+    if (arrCurLen - arrPreLen == 3) {
+        if (genderPre == male) {
+            rePre2Cur = "ông cố";
+        } else {
+            rePre2Cur = "bà cố";
+        }
+        if (genderCur == male) {
+            reCur2Pre = "chắt trai";
+        } else {
+            reCur2Pre = "chắt gái";
+        }
+    }
+
+    //2 cấp
+    if (arrPreLen - arrCurLen == 2) {
+        if (genderCur == male) {
+            if (nodeDataParentPre.text.gender == male) {
+                reCur2Pre = "ông nội";
+            } else {
+                reCur2Pre = "ông ngoại";
+            }
+        } else {
+            if (nodeDataParentPre.text.gender == male) {
+                reCur2Pre = "bà nội";
+            } else {
+                reCur2Pre = "bà ngoại";
+            }
+        }
+        if (genderPre == male) {
+            rePre2Cur = "cháu trai";
+        } else {
+            rePre2Cur = "cháu gái";
+        }
+    }
+    if (arrCurLen - arrPreLen == 2) {
+        if (genderPre == male) {
+            if (nodeDataParentCur.text.gender == male) {
+                rePre2Cur = "ông nội";
+            } else {
+                rePre2Cur = "ông ngoại";
+            }
+        } else {
+            if (nodeDataParentCur.text.gender == male) {
+                rePre2Cur = "bà nội";
+            } else {
+                rePre2Cur = "bà ngoại";
+            }
+        }
+        if (genderCur == male) {
+            reCur2Pre = "cháu trai";
+        } else {
+            reCur2Pre = "cháu gái";
+        }
     }
 
     //1 cấp
     if (arrCurLen - arrPreLen == 1) {
-        if (getParentHiarechy(hierachyCur) == hierachyPre) {
+        if (getHiarechyParent(hierachyCur) == hierachyPre) {
             if (genderCur == male) {
                 reCur2Pre = "con trai";
             } else {
@@ -431,14 +532,22 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
                 reCur2Pre = "cháu gái";
             }
             if (genderPre == male) {
-                rePre2Cur = "chú";
+                if (nodeDataParentCur.text.gender == male) {
+                    rePre2Cur = "chú";
+                } else {
+                    rePre2Cur = "cậu";
+                }
             } else {
-                rePre2Cur = "cô";
+                if (nodeDataParentCur.text.gender == male) {
+                    rePre2Cur = "cô";
+                } else {
+                    rePre2Cur = "dì";
+                }
             }
         }
     }
     if (arrPreLen - arrCurLen == 1) {
-        if (getParentHiarechy(hierachyPre) == hierachyCur) {
+        if (getHiarechyParent(hierachyPre) == hierachyCur) {
             if (genderCur == male) {
                 reCur2Pre = "bố";
             } else {
@@ -462,9 +571,18 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
             }
         } else if (hierachyPre < hierachyCur) {
             if (genderCur == male) {
-                reCur2Pre = "chú";
+                if (nodeDataParentPre.text.gender == male) {
+                    reCur2Pre = "chú";
+                }
+                else {
+                    reCur2Pre = "cậu";
+                }
             } else {
-                reCur2Pre = "cô";
+                if (nodeDataParentPre.text.gender == male) {
+                    reCur2Pre = "cô";
+                } else {
+                    reCur2Pre = "dì";
+                }
             }
             if (genderPre == male) {
                 rePre2Cur = "cháu trai";
@@ -477,7 +595,7 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
     //Cùng cấp
     if (arrCurLen - arrPreLen == 0) {
         if (hierachyPre < hierachyCur) {
-            if (getParentHiarechy(hierachyPre) == getParentHiarechy(hierachyCur)) {
+            if (getHiarechyParent(hierachyPre) == getHiarechyParent(hierachyCur)) {
                 if (genderCur == male) {
                     reCur2Pre = "em trai ruột";
                 } else {
@@ -503,7 +621,7 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
             }
         }
         if (hierachyPre > hierachyCur) {
-            if (getParentHiarechy(hierachyPre) == getParentHiarechy(hierachyCur)) {
+            if (getHiarechyParent(hierachyPre) == getHiarechyParent(hierachyCur)) {
                 if (genderCur == male) {
                     reCur2Pre = "anh ruột";
                 } else {

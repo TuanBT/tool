@@ -24,6 +24,11 @@
         <button type="button" class="btn btn-info slidedown" value="Swap" id="btnSwapNode" disabled> <span class="glyphicon glyphicon-retweet"></span></button>
         <button type="button" class="btn btn-danger slideleft" value="Delete" id="btnDeleteNode" disabled><span class="glyphicon glyphicon-remove"></span></button>
     </div>
+    <div class="group-relationship">
+        <span class="name-pre"></span> - <span class="name-cur"></span>
+        <br/>
+        <span class="relation-name-pre"></span> - <span class="relation-name-cur"></span>
+    </div>
     <div class="tab" id="info-panel">
         <div class="col-md-12 col-lg-12 info-detail">
             <table class="table table-user-information">
@@ -46,20 +51,6 @@
                     </tr>
                     <tr>
                         <td><input class="form-control nodeInfo" type="text" placeholder="Tên Vợ/Chồng" name="nodeSpouse" /></td>
-                    </tr>
-                    <tr class="text-center">
-                        <td>
-                            <span class="name-pre"></span></br>
-                            <span class="relation-name-pre"></span></br>
-                            <span class="name-cur"></span></br>
-                        </td>
-                    </tr>
-                    <tr class="text-center">
-                        <td>
-                            <span class="name-cur"></span></br>
-                            <span class="relation-name-cur"></span></br>
-                            <span class="name-pre"></span></br>
-                        </td>
                     </tr>
                 </tbody>
             </table>
