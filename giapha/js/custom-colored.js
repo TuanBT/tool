@@ -65,7 +65,7 @@ $(document).ready(function () {
         firebase.database().ref(pathDataCur).update(
             {
                 text: {
-                    ID : nodeDataCur.text.ID,
+                    ID: nodeDataCur.text.ID,
                     name: nodeName,
                     spouse: nodeSpouse,
                     gender: nodeDataCur.text.gender,
@@ -329,8 +329,12 @@ function clickNodeId(curId) {
         var relationshipStr = getRelationship(nodeDataPre.hierachy, nodeDataPre.text.gender, nodeDataCur.hierachy, nodeDataCur.text.gender);
         $('.name-pre').html(nodeDataPre.text.name);
         $('.name-cur').html(nodeDataCur.text.name);
+        $('.spouse-pre').html(nodeDataPre.text.spouse);
+        $('.spouse-cur').html(nodeDataCur.text.spouse);
         $('.relation-name-pre').html(relationshipStr[0]);
         $('.relation-name-cur').html(relationshipStr[1]);
+        $('.relation-spouse-pre').html(relationshipStr[2]);
+        $('.relation-spouse-cur').html(relationshipStr[3]);
     } else {
         $('.name-pre').html("");
         $('.relation-name-pre').html("");
@@ -374,6 +378,8 @@ function getHiarechyParent(hierachy) {
 function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
     var rePre2Cur = "";
     var reCur2Pre = "";
+    var reSpoPre2Cur = "";
+    var reSpoCur2Pre = "";
     var arrPre = hierachyPre.split('.');
     var arrCur = hierachyCur.split('.');
     var arrPreLen = arrPre.length;
@@ -383,25 +389,33 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
     if (arrPreLen - arrCurLen >= 5) {
         if (genderCur == male) {
             reCur2Pre = "ông";
+            reSpoCur2Pre = "bà";
         } else {
             reCur2Pre = "bà";
+            reSpoCur2Pre = "ông";
         }
         if (genderPre == male) {
             rePre2Cur = "cháu trai";
+            reSpoPre2Cur = "cháu";
         } else {
             rePre2Cur = "cháu gái";
+            reSpoPre2Cur = "cháu";
         }
     }
     if (arrCurLen - arrPreLen >= 5) {
         if (genderPre == male) {
             rePre2Cur = "ông";
+            reSpoPre2Cur = "bà";
         } else {
             rePre2Cur = "bà";
+            reSpoPre2Cur = "ông";
         }
         if (genderCur == male) {
             reCur2Pre = "cháu trai";
+            reSpoCur2Pre = "cháu";
         } else {
             reCur2Pre = "cháu gái";
+            reSpoCur2Pre = "cháu";
         }
     }
 
@@ -409,25 +423,33 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
     if (arrPreLen - arrCurLen == 4) {
         if (genderCur == male) {
             reCur2Pre = "ông kỵ";
+            reSpoCur2Pre = "bà kỵ";
         } else {
             reCur2Pre = "bà kỵ";
+            reSpoCur2Pre = "ông kỵ";
         }
         if (genderPre == male) {
             rePre2Cur = "chút trai";
+            reSpoPre2Cur = "chút";
         } else {
             rePre2Cur = "chút gái";
+            reSpoPre2Cur = "chút";
         }
     }
     if (arrCurLen - arrPreLen == 4) {
         if (genderPre == male) {
             rePre2Cur = "ông kỵ";
+            reSpoPre2Cur = "bà kỵ";
         } else {
             rePre2Cur = "bà kỵ";
+            reSpoPre2Cur = "ông kỵ";
         }
         if (genderCur == male) {
             reCur2Pre = "chút trai";
+            reSpoCur2Pre = "chút";
         } else {
             reCur2Pre = "chút gái";
+            reSpoCur2Pre = "chút";
         }
     }
 
@@ -435,25 +457,33 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
     if (arrPreLen - arrCurLen == 3) {
         if (genderCur == male) {
             reCur2Pre = "ông cố";
+            reSpoCur2Pre = "bà cố";
         } else {
             reCur2Pre = "bà cố";
+            reSpoCur2Pre = "ông cố";
         }
         if (genderPre == male) {
             rePre2Cur = "chắt trai";
+            reSpoPre2Cur = "chắt";
         } else {
             rePre2Cur = "chắt gái";
+            reSpoPre2Cur = "chắt";
         }
     }
     if (arrCurLen - arrPreLen == 3) {
         if (genderPre == male) {
             rePre2Cur = "ông cố";
+            reSpoPre2Cur = "bà cố";
         } else {
             rePre2Cur = "bà cố";
+            reSpoPre2Cur = "ông cố";
         }
         if (genderCur == male) {
             reCur2Pre = "chắt trai";
+            reSpoCur2Pre = "chắt";
         } else {
             reCur2Pre = "chắt gái";
+            reSpoCur2Pre = "chắt";
         }
     }
 
@@ -462,40 +492,54 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
         if (genderCur == male) {
             if (nodeDataParentPre.text.gender == male) {
                 reCur2Pre = "ông nội";
+                reSpoCur2Pre = "bà nội";
             } else {
                 reCur2Pre = "ông ngoại";
+                reSpoCur2Pre = "bà ngoại";
             }
         } else {
             if (nodeDataParentPre.text.gender == male) {
                 reCur2Pre = "bà nội";
+                reSpoCur2Pre = "ông nội";
             } else {
                 reCur2Pre = "bà ngoại";
+                reSpoCur2Pre = "ông ngoại";
             }
         }
         if (genderPre == male) {
             rePre2Cur = "cháu trai";
+            reSpoPre2Cur = "cháu dâu";
         } else {
             rePre2Cur = "cháu gái";
+            reSpoPre2Cur = "cháu rể";
         }
     }
     if (arrCurLen - arrPreLen == 2) {
         if (genderPre == male) {
             if (nodeDataParentCur.text.gender == male) {
+                //Bố của bố
                 rePre2Cur = "ông nội";
+                //Vợ của bố của bố
+                reSpoPre2Cur = "ông ngoại";
             } else {
                 rePre2Cur = "ông ngoại";
+                reSpoPre2Cur = "ông nội";
             }
         } else {
             if (nodeDataParentCur.text.gender == male) {
                 rePre2Cur = "bà nội";
+                reSpoPre2Cur = "bà ngoại";
             } else {
                 rePre2Cur = "bà ngoại";
+                reSpoPre2Cur = "bà nội";
             }
         }
         if (genderCur == male) {
             reCur2Pre = "cháu trai";
+            reSpoCur2Pre = "cháu dâu";
         } else {
             reCur2Pre = "cháu gái";
+            reSpoCur2Pre = "cháu rể";
         }
     }
 
@@ -503,45 +547,87 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
     if (arrCurLen - arrPreLen == 1) {
         if (getHiarechyParent(hierachyCur) == hierachyPre) {
             if (genderCur == male) {
+                //Con trai của bố/mẹ
                 reCur2Pre = "con trai";
+                //Vợ củ con gái bố/mẹ
+                reSpoCur2Pre = "con dâu";
             } else {
+                //Con gái của bố/mẹ
                 reCur2Pre = "con gái";
+                //Chồng của con gái bố/mẹ
+                reSpoCur2Pre = "con rể";
             }
             if (genderPre == male) {
+                //Bố
                 rePre2Cur = "bố";
+                //Mẹ
+                reSpoPre2Cur = "mẹ";
             } else {
+                //Mẹ
                 rePre2Cur = "mẹ";
+                //Bố
+                reSpoPre2Cur = "bố";
             }
         } else if (hierachyCur > hierachyPre) {
             if (genderCur == male) {
-                reCur2Pre = "cháu trai";
+                //Con trai của em trai/gái
+                reCur2Pre = "cháu";
+                //Vợ của con trai em trai/gái
+                reSpoCur2Pre = "cháu dâu";
             }
             else {
-                reCur2Pre = "cháu gái";
+                //Con gái của em trai/gái
+                reCur2Pre = "cháu";
+                //Chồng của con gái em trai/gái
+                reSpoCur2Pre = "cháu rể";
             }
             if (genderPre == male) {
-                rePre2Cur = "bác trai";
+                //Anh trai của bố
+                rePre2Cur = "bác";
+                //Vợ của anh trai bó
+                reSpoPre2Cur = "bác";
             } else {
-                rePre2Cur = "bác gái";
+                //Chị gái của bố
+                rePre2Cur = "bác";
+                //Chồng của chị gái bố
+                reSpoPre2Cur = "bác";
             }
         }
         else if (hierachyCur < hierachyPre) {
             if (genderCur == male) {
-                reCur2Pre = "cháu trai";
+                //Con trai của anh/chị
+                reCur2Pre = "cháu";
+                //Vợ của con trai anh/chị
+                reSpoCur2Pre = "cháu dâu";
             } else {
-                reCur2Pre = "cháu gái";
+                //Con gái của anh/chị
+                reCur2Pre = "cháu";
+                //Chồng của con gái anh/chị
+                reSpoCur2Pre = "cháu rể";
             }
             if (genderPre == male) {
                 if (nodeDataParentCur.text.gender == male) {
+                    //Em trai của bố
                     rePre2Cur = "chú";
+                    //Vợ của em trai bố
+                    reSpoPre2Cur = "thím";
                 } else {
+                    //Em trai của mẹ
                     rePre2Cur = "cậu";
+                    //Vợ của em trai mẹ
+                    reSpoPre2Cur = "mợ";
                 }
             } else {
                 if (nodeDataParentCur.text.gender == male) {
+                    //Em gái của bố
                     rePre2Cur = "cô";
+                    //Chồng của em gái bố
+                    reSpoPre2Cur = "chú";
                 } else {
+                    //Em gái của mẹ
                     rePre2Cur = "dì";
+                    //Chồng của em gái mẹ
+                    reSpoPre2Cur = "chú";
                 }
             }
         }
@@ -550,44 +636,58 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
         if (getHiarechyParent(hierachyPre) == hierachyCur) {
             if (genderCur == male) {
                 reCur2Pre = "bố";
+                reSpoCur2Pre = "mẹ";
             } else {
                 reCur2Pre = "bố";
+                reSpoCur2Pre = "mẹ";
             }
             if (genderPre == male) {
                 rePre2Cur = "con trai";
+                reSpoPre2Cur = "con dâu";
             } else {
                 rePre2Cur = "con gái";
+                reSpoPre2Cur = "con rể";
             }
         } else if (hierachyPre > hierachyCur) {
             if (genderCur == male) {
                 reCur2Pre = "bác trai";
+                reSpoCur2Pre = "bác";
             } else {
-                reCur2Pre = "bác trai";
+                reCur2Pre = "bác gái";
+                reSpoCur2Pre = "bác";
             }
             if (genderPre == male) {
                 rePre2Cur = "cháu trai";
+                reSpoPre2Cur = "cháu dâu";
             } else {
                 rePre2Cur = "cháu gái";
+                reSpoPre2Cur = "cháu rể";
             }
         } else if (hierachyPre < hierachyCur) {
             if (genderCur == male) {
                 if (nodeDataParentPre.text.gender == male) {
                     reCur2Pre = "chú";
+                    reSpoCur2Pre = "cô";
                 }
                 else {
                     reCur2Pre = "cậu";
+                    reSpoCur2Pre = "mợ";
                 }
             } else {
                 if (nodeDataParentPre.text.gender == male) {
                     reCur2Pre = "cô";
+                    reSpoCur2Pre = "chú";
                 } else {
                     reCur2Pre = "dì";
+                    reSpoCur2Pre = "chú";
                 }
             }
             if (genderPre == male) {
                 rePre2Cur = "cháu trai";
+                reSpoPre2Cur = "cháu";
             } else {
                 rePre2Cur = "cháu gái";
+                reSpoPre2Cur = "cháu";
             }
         }
     }
@@ -597,26 +697,34 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
         if (hierachyPre < hierachyCur) {
             if (getHiarechyParent(hierachyPre) == getHiarechyParent(hierachyCur)) {
                 if (genderCur == male) {
-                    reCur2Pre = "em trai ruột";
+                    reCur2Pre = "em ruột";
+                    reSpoCur2Pre = "em dâu";
                 } else {
-                    reCur2Pre = "em gái ruột";
+                    reCur2Pre = "em ruột";
+                    reSpoCur2Pre = "em rể";
                 }
                 if (genderPre == male) {
                     rePre2Cur = "anh ruột";
+                    reSpoPre2Cur = "chị dâu";
                 } else {
                     rePre2Cur = "chị ruột";
+                    reSpoPre2Cur = "anh rể";
                 }
             }
             else {
                 if (genderCur == male) {
-                    reCur2Pre = "em trai họ";
+                    reCur2Pre = "em họ";
+                    reSpoCur2Pre = "em";
                 } else {
-                    reCur2Pre = "em gái họ";
+                    reCur2Pre = "em họ";
+                    reSpoCur2Pre = "em";
                 }
                 if (genderPre == male) {
                     rePre2Cur = "anh họ";
+                    reSpoPre2Cur = "chị";
                 } else {
                     rePre2Cur = "chị họ";
+                    reSpoPre2Cur = "anh";
                 }
             }
         }
@@ -624,31 +732,39 @@ function getRelationship(hierachyPre, genderPre, hierachyCur, genderCur) {
             if (getHiarechyParent(hierachyPre) == getHiarechyParent(hierachyCur)) {
                 if (genderCur == male) {
                     reCur2Pre = "anh ruột";
+                    reSpoCur2Pre = "chị dâu";
                 } else {
                     reCur2Pre = "chị ruột";
+                    reSpoCur2Pre = "anh rể";
                 }
                 if (genderPre == male) {
-                    rePre2Cur = "em trai ruột";
+                    rePre2Cur = "em ruột";
+                    reSpoPre2Cur = "em dâu";
                 } else {
-                    rePre2Cur = "em gái ruột";
+                    rePre2Cur = "em ruột";
+                    reSpoPre2Cur = "em rể";
                 }
             }
             else {
                 if (genderCur == male) {
                     reCur2Pre = "anh họ";
+                    reSpoCur2Pre = "chị";
                 } else {
                     reCur2Pre = "chị họ";
+                    reSpoCur2Pre = "anh";
                 }
                 if (genderPre == male) {
-                    rePre2Cur = "em trai họ";
+                    rePre2Cur = "em họ";
+                    reSpoPre2Cur = "em";
                 } else {
-                    rePre2Cur = "em gái họ";
+                    rePre2Cur = "em họ";
+                    reSpoPre2Cur = "em";
                 }
             }
         }
     }
 
-    return [rePre2Cur, reCur2Pre];
+    return [rePre2Cur, reCur2Pre, reSpoPre2Cur, reSpoCur2Pre];
 
 }
 

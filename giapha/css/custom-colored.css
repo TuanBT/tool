@@ -111,7 +111,7 @@ abbr, acronym {
 }
 
 .node-name {
-    /* font-weight: bold; */
+    font-weight: bold;
     height: 20px;
     -webkit-border-radius: 3px 3px 0px 0px;
     -moz-border-radius: 3px 3px 0px 0px;
@@ -120,7 +120,8 @@ abbr, acronym {
 
 .node-spouse {
     height: 20px;
-    color: #7f8c8d;
+    color: whitesmoke;
+    font-weight: bold;
     /* -webkit-border-radius: 0px 0px 3px 3px;
     -moz-border-radius: 0px 0px 3px 3px;
     border-radius: 0px 0px 3px 3px; */
@@ -148,11 +149,27 @@ abbr, acronym {
 }
 
 .nodeDetail.ndmale {
-    box-shadow: inset 0px 0px 20px rgba(91, 206, 250, 0.5);
+    /* box-shadow: inset 0px 0px 20px rgba(91, 206, 250, 0.5); */
+}
+
+.nodeDetail.ndmale .node-spouse{
+    box-shadow: inset 0px -5px 20px rgba(91, 206, 250, 0.5);
+}
+
+.nodeDetail.ndmale .node-name{
+    box-shadow: inset 0px 5px 20px rgba(91, 206, 250, 0.5);
 }
 
 .nodeDetail.ndfemale {
-    box-shadow: inset 0px 0px 20px rgba(245, 169, 184, 0.5);
+    /* box-shadow: inset 0px 0px 20px rgba(245, 169, 184, 0.5); */
+}
+
+.nodeDetail.ndfemale .node-name{
+    box-shadow: inset 0px 5px 20px rgba(245, 169, 184, 0.5);
+}
+
+.nodeDetail.ndfemale .node-spouse{
+    box-shadow: inset 0px -5px 20px rgba(245, 169, 184, 0.5);
 }
 
 .nodeDetail.male {
@@ -181,6 +198,11 @@ abbr, acronym {
     font-weight: bold;
 }
 
+.spouse-cur{
+    color: #843534;
+    /* font-weight: bold; */
+}
+
 .relation-name-pre {
     color: #2b542c;
     font-weight: bold;
@@ -189,6 +211,16 @@ abbr, acronym {
 .relation-name-cur {
     color: #843534;
     font-weight: bold;
+}
+
+.relation-spouse-pre{
+    /* font-weight: bold; */
+    color: #2b542c;
+}
+
+.relation-spouse-cur{
+    /* font-weight: bold; */
+    color: #843534;
 }
 
 .table-user-information>tbody>tr {
