@@ -49,7 +49,7 @@ ref.on("value", function (snapshot) {
         curId = $(this).find(".node-ID").text();
         thisEleCur = this;
 
-        clickNodeId(curId);
+        clickNodeId();
     });
 })
 
@@ -135,7 +135,7 @@ $(document).ready(function () {
             );
 
             curId = nodeData.hierachy + "." + hierachyNum;
-            clickNodeId(curId);
+            clickNodeId();
         });
     });
 
@@ -144,7 +144,8 @@ $(document).ready(function () {
         firebase.database().ref(pathDataCur).remove();
         $('#btnDeleteNode').prop("disabled", true);
         //Show detail of root
-        clickNodeId(1);
+        curId = 1;
+        clickNodeId();
     });
 
     //Swap a node
@@ -269,7 +270,10 @@ function convertJsonPath2FirePath(inStr) {
     return str;
 }
 
-function clickNodeId(curId) {
+function clickNodeId() {
+    preId = preId == "" ? "1" : preId;
+    curId = curId == "" ? "1" : curId;
+
     nodeDataPre = jsonPath(tree, "$.[?(@.hierachy == \"" + preId + "\")]")[0];
     nodeDataCur = jsonPath(tree, "$.[?(@.hierachy == \"" + curId + "\")]")[0];
 
