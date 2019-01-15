@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
-    <title>Gia phả Bùi Tộc</title>
+    <title>Gia phả Bùi tộc Sửa</title>
     <script src="lib/treanjs/vendor/jquery.min.js"></script>
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
@@ -17,6 +17,13 @@
 </head>
 
 <body>
+    <div class="group-function">
+        <button type="button" class="btn btn-primary slidedown" value="Show" id="btnShow"><span class="glyphicon glyphicon-arrow-down"></span></button>
+        <button type="button" class="btn btn-dark slideup" value="Hide" id="btnHide"><span class="glyphicon glyphicon-arrow-up"></span></button>
+        <button type="button" class="btn btn-success slideright" value="Add" id="btnAddNode" disabled><span class="glyphicon glyphicon-plus"></span></button>
+        <button type="button" class="btn btn-info slidedown" value="Swap" id="btnSwapNode" disabled> <span class="glyphicon glyphicon-retweet"></span></button>
+        <button type="button" class="btn btn-danger slideleft" value="Delete" id="btnDeleteNode" disabled><span class="glyphicon glyphicon-remove"></span></button>
+    </div>
     <div class="group-relationship">
         <span class="name-pre"></span> - <span class="spouse-pre"></span> / <span class="name-cur"></span> - <span class="spouse-cur"></span>
         <br/>
